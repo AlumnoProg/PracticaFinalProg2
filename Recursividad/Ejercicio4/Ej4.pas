@@ -1,0 +1,61 @@
+unit Ej4;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    Edit1: TEdit;
+    Button1: TButton;
+    Memo1: TMemo;
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+Function Validar(Edit: String): Boolean;
+var
+  i: integer;
+  Flag: Boolean;
+begin
+  Flag:= True;
+  if (not(TryStrToInt(Edit, i))) or (i < 0) or (i > 40) then
+    Flag:= False;
+  Validar:= Flag;
+end;
+
+Function Fibonacci(N: integer):integer;
+begin
+  if (N <= 1) then
+    result:= N
+  else
+    result:= Fibonacci(N - 1) + Fibonacci(N -2);
+end;
+
+//BOTON
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  Numero: integer;
+begin
+
+  if Validar(edit1.Text) then begin
+    Numero:= StrToInt(edit1.Text);
+    memo1.Lines.Add(Fibonacci(Numero).ToString);
+  end else
+    memo1.Lines.Add('Error, ingrese un numero entero mayor a 0 y menor a 40');
+end;
+
+end.
