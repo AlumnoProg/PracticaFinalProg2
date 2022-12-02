@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2022/07/11 19:05:56.000.773,=C:\Users\54232\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2022/12/02 16:31:54.000.298,=C:\Users\54232\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2022/12/02 16:32:21.000.601,C:\Users\54232\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Programas Final Prog2 DIC 2022\Listas\Ejercicio2\Ej2.dfm</Transaction>
+    <Transaction>2022/12/02 16:32:21.000.601,C:\Users\54232\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Programas Final Prog2 DIC 2022\Listas\Ejercicio2\Ej2.pas</Transaction>
+    <Transaction>2022/12/02 16:32:30.000.862,C:\Users\54232\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Programas Final Prog2 DIC 2022\Listas\Ejercicio2\Ejercicio2.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

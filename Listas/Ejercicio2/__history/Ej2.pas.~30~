@@ -1,0 +1,270 @@
+unit Ej2;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, ListArray, Tipos;
+
+type
+  TForm1 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label5: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label6: TLabel;
+    Edit1: TEdit;
+    Button1: TButton;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Button8: TButton;
+    Button6: TButton;
+    Button2: TButton;
+    Button7: TButton;
+    Button10: TButton;
+    Button4: TButton;
+    Button3: TButton;
+    Button5: TButton;
+    Button9: TButton;
+    Edit4: TEdit;
+    Memo1: TMemo;
+    procedure Button1Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  L: Lista;
+  Tamanio: String;
+
+implementation
+
+{$R *.dfm}
+
+
+//------------------------------------------------------------------------------
+//CREAR LISTA
+
+Function ValidarTamanio(Edit: String): Boolean;
+var
+  i: integer;
+begin
+  if (not(TryStrToInt(Edit, i))) or (i < 1) or (i > 2000) then
+    ValidarTamanio:= False
+  else
+    ValidarTamanio:= True;
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  Tamanio:= edit1.Text;
+  if ValidarTamanio(Tamanio) then begin
+    L.Crear(Numero, StrToInt(Tamanio));
+    memo1.Lines.Add('Lista creada con éxito');
+  end else
+    memo1.Lines.Add('Error, ingrese un numero entero entre 1 y 2000');
+end;
+
+//------------------------------------------------------------------------------
+//MOSTRAR LISTA
+
+Procedure Mostrar(Memo: Tmemo; LAux: Lista);
+var
+  X: TipoElemento;
+  Q: PosicionLista;
+begin
+
+  Memo.Lines.Add('-------------------------');
+  Memo.Lines.Add('Lista: ');
+  Q:= LAux.Comienzo;
+  while Q <> NULO do begin
+    X:= LAux.Recuperar(Q);
+    Memo.Lines.Add(VarToStr(X.Clave));
+    Q:= LAux.Siguiente(Q);
+  end;
+  Memo.Lines.Add('-------------------------');
+
+end;
+
+
+procedure TForm1.Button7Click(Sender: TObject);
+begin
+  Mostrar(memo1, L);
+end;
+
+
+//------------------------------------------------------------------------------
+//Carga aleatoria
+
+Function ValidarEdit(Edit: String): Boolean;
+var
+  i: integer;
+begin
+  if (not(TryStrToInt(Edit, i))) then
+    ValidarEdit:= False
+  else
+    ValidarEdit:= True;
+end;
+
+Function ValidarRangos(Desde, Hasta: String): Boolean;
+begin
+  if (StrToInt(Desde) >= StrToInt(Hasta)) then
+    ValidarRangos:= False
+  else
+    ValidarRangos:= True;
+end;
+
+procedure TForm1.Button8Click(Sender: TObject);
+var
+  Desde, Hasta: String;
+begin
+  Desde:= edit2.Text;
+  Hasta:= edit3.Text;
+  if (ValidarEdit(Desde)) and (ValidarEdit(Hasta)) and (ValidarRangos(Desde, Hasta)) then begin
+    L.LlenarClavesRandom(StrToInt(Tamanio), StrToInt(Desde), (StrToInt(Hasta) - StrToInt(Desde)) - 1);
+    memo1.Lines.Add('Lista cargada con éxito')
+  end else
+    memo1.Lines.Add('Error, desde y hasta');
+end;
+
+//------------------------------------------------------------------------------
+//Carga aleatoria valores unicos
+
+procedure TForm1.Button6Click(Sender: TObject);
+var
+  Desde, Hasta: String;
+  X: TipoElemento;
+begin
+  Desde:= edit2.Text;
+  Hasta:= edit3.Text;
+  Randomize;
+  if (ValidarEdit(Desde)) and (ValidarEdit(Hasta)) and (ValidarRangos(Desde, Hasta)) then begin
+    X.Clave:= StrToInt(Desde) + random((StrToInt(hasta)-StrToInt(desde))+1);
+    L.Agregar(X);
+    while (not L.EsLLena) do begin
+      X.Clave:= StrToInt(Desde) + random((StrToInt(hasta)-StrToInt(desde))+1);
+      while (L.Buscar(X) <> NULO) do begin
+        X.Clave:= StrToInt(Desde) + random((StrToInt(hasta)-StrToInt(desde))+1);
+      end;
+      l.Agregar(X);
+    end;
+    memo1.Lines.Add('Lista cargada con exito');
+  end else
+    memo1.Lines.Add('Error');
+end;
+
+
+//------------------------------------------------------------------------------
+//Lista inversa
+
+Function invertirLista(): Lista;
+var
+  LAux: Lista;
+  X: TipoElemento;
+  PL: PosicionLista;
+begin
+  LAux.Crear(L.DatoDeLaClave, L.SizeList);
+  PL:= L.Fin;
+  while (PL <> NULO) do begin
+    X:= L.Recuperar(PL);
+    LAux.Agregar(X);
+    PL:= L.Anterior(PL);
+  end;
+  result:= LAux;
+end;
+
+procedure TForm1.Button10Click(Sender: TObject);
+var
+  LAux: Lista;
+begin
+  LAux:= invertirLista();
+  Mostrar(memo1, LAux);
+end;
+
+
+//------------------------------------------------------------------------------
+//Mayor y posicion ordinal
+
+procedure TForm1.Button2Click(Sender: TObject);
+var
+  X, Mayor: TipoElemento;
+  PL: PosicionLista;
+  Pos, PosMayor: Integer;
+begin
+  PL:= L.Comienzo;
+  Mayor:= L.Recuperar(PL);
+  PosMayor:= 1;
+  Pos:= 1;
+  PL:= L.Siguiente(PL);
+  while (PL <> NULO) do begin
+    Inc(Pos);
+    X:= L.Recuperar(PL);
+    if (X.Clave > Mayor.Clave) then begin
+      Mayor:= X;
+      PosMayor:= Pos;
+    end;
+    PL:= L.Siguiente(PL);
+  end;
+  memo1.Lines.Add('El mayor es ' + VarToStr(Mayor.Clave) + ' en la posicion ' + IntToStr(PosMayor));
+end;
+
+
+//------------------------------------------------------------------------------
+//Numero minimo y cantidad de repeticiones
+
+procedure TForm1.Button3Click(Sender: TObject);
+var
+  X, Menor: TipoElemento;
+  PL: PosicionLista;
+  cantRepeticiones: Integer;
+begin
+  PL:= L.Comienzo;
+  Menor:= L.Recuperar(PL);
+  PL:= L.Siguiente(PL);
+  cantRepeticiones:= 1;
+  while (PL <> NULO) do begin
+    X:= L.Recuperar(PL);
+    if (X.Clave < Menor.Clave) then begin
+      Menor:= X;
+      cantRepeticiones:= 1;
+    end else
+      if (X.Clave = Menor.Clave) then begin
+        Inc(cantRepeticiones);
+      end;
+    PL:= L.Siguiente(PL);
+  end;
+  memo1.Lines.Add('El menor es ' + VarToStr(Menor.Clave) + ' y se repite ' + IntToStr(cantRepeticiones) + ' veces');
+end;
+
+
+//------------------------------------------------------------------------------
+//Promedio recursivo
+
+Function Promedio(P: PosicionLista; Total, cant: extended): Real;
+var
+  X: TipoElemento;
+begin
+
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+var
+  Total, i: extended;
+begin
+  i:= 0;
+  Total:= 0;
+  memo1.Lines.Add('Promedio: ' + FloatToStr(Promedio(L.Comienzo, 0, 0)));
+end;
+
+end.
