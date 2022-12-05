@@ -1,0 +1,236 @@
+unit Ej4;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, QueuesArray, Vcl.StdCtrls;
+
+Const MaxEntero = 9999999;
+      MaxCola = 2000;
+
+type
+  TForm1 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Edit1: TEdit;
+    Button1: TButton;
+    Edit2: TEdit;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Memo1: TMemo;
+    Button5: TButton;
+    Label4: TLabel;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  C: Cola;
+
+implementation
+
+{$R *.dfm}
+
+//------------------------------------------------------------------------------
+//DEFINIR COLA
+
+Function ValidarLongitud(AValidar: String; Var Validado: Integer): Boolean;
+Begin
+
+  ValidarLongitud:= False;
+  if(TryStrToInt(AValidar, Validado))and(Validado>=1)and(Validado<=MaxCola)then
+    ValidarLongitud:= True;
+
+End;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  Longitud: Integer;
+begin
+
+  if (ValidarLongitud(edit1.Text, Longitud)) then begin
+    if(C.MaxSizeQueue=MaxCola)then
+      C.Crear(Numero, Longitud)
+    else
+      C.Crear(Numero, Longitud+1);
+    Memo1.Lines.Add(' -COLA DEFINIDA- ')
+  end else
+    memo1.Lines.Add('Error, ingrese datos válidos');
+end;
+
+
+//------------------------------------------------------------------------------
+//CARGAR COLA
+
+Function SinEspacios(S: String): Boolean;
+Var Posicion: Integer;
+Begin
+
+  Posicion:= 1;
+  SinEspacios:= False;
+  while(Posicion<=Length(S))and(S[Posicion]<>' ')do
+    Inc(Posicion);
+  if(Posicion>Length(S))then SinEspacios:= True;
+
+End;
+
+Function ValidarNumero(NCadena: String; Var Validado: LongInt): Boolean;
+Begin
+
+  ValidarNumero:= False;
+  if(TryStrToInt(NCadena, Validado))and(SinEspacios(NCadena))
+  and((-MaxEntero<=Validado)and(Validado<=MaxEntero))then
+    ValidarNumero:= True;
+
+End;
+
+Function UltimoElemento(Var C: Cola): TipoElemento;
+var
+  X: TipoElemento;
+  CAux: Cola;
+begin
+
+  CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+  while (not C.EsVacia) do begin
+    X:= C.Recuperar;
+    CAux.Encolar(X);
+    C.DesEncolar;
+  end;
+  C.InterCambiar(CAux, False);
+  UltimoElemento:= X;
+
+end;
+
+
+Function CargarNumero(Numero: String; Var C: Cola):Boolean;
+var
+  X: TipoElemento;
+  AEncolar, Ultimo: LongInt;
+begin
+
+  CargarNumero:= False;
+  if (ValidarNumero(Numero, AEncolar)) then begin
+    if (not C.EsVacia) then begin
+      Ultimo:= UltimoElemento(C).Clave;
+      if (Ultimo <= AEncolar) then begin
+        X.Clave:= AEncolar;
+        if (C.Encolar(X) = OK) then
+          CargarNumero:= True;
+      end;
+    end else begin
+      X.Clave:= AEncolar;
+      if (C.Encolar(X) = OK) then
+        CargarNumero:= True;
+    end;
+  end;
+
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+
+  if (not C.EsLlena) then begin
+    if (CargarNumero(edit2.Text, C)) then begin
+      memo1.Lines.Add(edit2.Text + ' cargado en la cola con éxito');
+    end else
+      memo1.Lines.Add('Error, ingrese datos válidos');
+  end else
+    memo1.Lines.Add('Cola llena');
+  edit2.Clear;
+
+end;
+
+
+//------------------------------------------------------------------------------
+//MOSTRAR COLA
+
+Procedure MostrarCola(Cartel: String; Var C: Cola; Memo1: TMemo);
+Var TeC: TipoElemento;
+    CAux: Cola;
+    Posicion: Integer;
+Begin
+
+  Posicion:= 1;
+  Memo1.Lines.Add(' ');
+  Memo1.Lines.Add(' || '+Cartel+' ||');
+  if(Not C.EsVacia)then begin
+    CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+    Memo1.Lines.Add(' ');
+    while(Not C.EsVacia)do begin
+      TeC:= C.Recuperar;
+      Memo1.Lines.Add(' Posicion : '+Posicion.ToString+' | Elemento : '+VarToStr(TeC.Clave));
+      CAux.Encolar(TeC);
+      C.DesEncolar;
+      Inc(Posicion);
+    end;
+    C.InterCambiar(CAux, False);
+  end else begin
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -COLA VACIA-');
+  end;
+
+End;
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+  memo1.Lines.Add(' ');
+  MostrarCola('Cola', C, Memo1);
+end;
+
+
+//------------------------------------------------------------------------------
+//VER VALORES UNICOS
+
+Function ValoresUnicos(Var C: Cola): Cola;
+var
+  Actual, Ultimo: TipoElemento;
+  CAux, CR: Cola;
+  Cantidad: Integer;
+begin
+  CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+  CR.Crear(C.DatoDeLaClave, C.SizeQueue);
+  Cantidad:= 1;
+  Ultimo:= C.Recuperar;
+  CAux.Encolar(Ultimo);
+  C.DesEncolar;
+  while (not C.EsVacia) do begin
+    Actual:= C.Recuperar;
+    if (Ultimo.Clave = Actual.Clave) then begin
+
+    end;
+  end;
+  if (Cantidad = 1) then
+    CR.Encolar(Ultimo);
+  C.InterCambiar(CAux, False);
+  ValoresUnicos:= CR;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+var
+  CUnicos: Cola;
+begin
+
+  if (not C.EsVacia) then begin
+    CUnicos:= ValoresUnicos(C);
+    if (not CUnicos.EsVacia) then begin
+      memo1.Lines.Add(' ');
+      MostrarCola('Cola Valores Únicos:', CUnicos, memo1);
+    end else begin
+      memo1.Lines.Add(' ');
+      memo1.Lines.Add('No hay valores únicos en la cola');
+    end;
+  end else
+    memo1.Lines.Add('Cola vacía');
+end;
+
+end.

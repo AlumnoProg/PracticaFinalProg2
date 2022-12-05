@@ -1,0 +1,80 @@
+unit Ej3;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, QueuesArray, Vcl.StdCtrls;
+
+Const MaxCadena = 255;
+      MaxCola = 2000;
+
+type
+  TForm1 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Edit1: TEdit;
+    Button1: TButton;
+    Memo1: TMemo;
+    Edit2: TEdit;
+    Button2: TButton;
+    Button3: TButton;
+    Edit3: TEdit;
+    Button4: TButton;
+    Button5: TButton;
+    Button6: TButton;
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  C1, C2: Cola;
+
+implementation
+
+{$R *.dfm}
+
+//------------------------------------------------------------------------------
+//DEFINIR COLAS
+
+Function ValidarLongitud(AValidar: String; Var Validado: Integer): Boolean;
+Begin
+
+  ValidarLongitud:= False;
+  if(TryStrToInt(AValidar, Validado))and(1<=Validado)and(Validado<=MaxCola)then
+    ValidarLongitud:= True;
+
+End;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  Longitud: Integer;
+begin
+
+  if(ValidarLongitud(Edit1.Text, Longitud))then begin
+    if(C1.MaxSizeQueue=MaxCola)then begin
+      C1.Crear(Cadena, Longitud);
+      C2.Crear(Cadena, Longitud);
+    end else begin
+      C1.Crear(Cadena, Longitud+1);
+      C2.Crear(Cadena, Longitud+1);
+    end;
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -COLAS DEFINIDAS- ');
+  end else begin
+
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -INGRESE VALORES PERMITIDOS- ');
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' Ingrese valor entero entre 1 y '+MaxCola.ToString+'. ');
+
+  end;
+end;
+
+end.
