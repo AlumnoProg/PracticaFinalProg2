@@ -1,0 +1,172 @@
+unit Ej5;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, StackArray, Vcl.StdCtrls;
+
+Const MaxPila = 2000;
+      MaxCadena = 255;
+
+type
+  TForm1 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Edit1: TEdit;
+    Button1: TButton;
+    Button2: TButton;
+    Edit2: TEdit;
+    Button3: TButton;
+    Memo1: TMemo;
+    Button4: TButton;
+    Button5: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  P, PInvertida: Pila;
+
+implementation
+
+{$R *.dfm}
+
+
+//------------------------------------------------------------------------------
+//DEFINIR PILA
+
+Function ValidarLongitud(Edit: String; Var Longitud: Integer): Boolean;
+begin
+
+  ValidarLongitud:= False;
+  if (TryStrToInt(Edit, Longitud)) and (Longitud >= 1) and (Longitud <= 2000) then
+    ValidarLongitud:= True;
+
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  Longitud: Integer;
+begin
+
+  if (ValidarLongitud(edit1.Text, Longitud)) then begin
+    P.Crear(Cadena, Longitud);
+    memo1.Lines.Add('Pila definida con éxito');
+  end else
+    memo1.Lines.Add('Error, ingrese un numero entero de 0 a 2000');
+end;
+
+
+//------------------------------------------------------------------------------
+//CARGAR PILA
+
+Function SinEspacios(S: String): Boolean;
+Var Posicion: Integer;
+
+Begin
+
+  Posicion:= 1;
+  SinEspacios:= False;
+
+  while(Posicion<=Length(S))and(S[Posicion]<>' ')do
+    Inc(Posicion);
+
+  if(Posicion>Length(S))then SinEspacios:= True;
+
+End;
+
+Function ValidarEdit(Edit: String): Boolean;
+begin
+
+  ValidarEdit:= False;
+  if (Edit <> '') and (SinEspacios(Edit)) and (Length(Edit) >= 1) and (Length(Edit) <= 2000) then
+    ValidarEdit:= True;
+
+end;
+
+Function CargarElemento(Elemento: String; Var P: Pila): Boolean;
+var
+  X: TipoElemento;
+begin
+
+  CargarElemento:= False;
+  if (ValidarEdit(Elemento)) then begin
+    X.Clave:= Elemento;
+    P.Apilar(X);
+    CargarElemento:= True;
+  end;
+
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+  if (not P.EsLlena) then begin
+    if (CargarElemento(edit2.Text, P)) then begin
+      memo1.Lines.Add(edit2.Text + ' apilado con éxito');
+    end else
+      memo1.Lines.Add('Error, ingrese los datos correctamente');
+  end else
+    memo1.Lines.Add('Pila llena');
+  edit2.Clear;
+end;
+
+
+//------------------------------------------------------------------------------
+//MOSTRAR PILA
+
+Procedure MostrarPila(Cartel: String; Var P: Pila; Memo1: TMemo);
+Begin
+
+  Memo1.Lines.Add(' ');
+  Memo1.Lines.Add(' || '+Cartel+' ||');
+  if(Not P.EsVacia)then
+    Memo1.Lines.Add(P.RetornarClaves)
+  else begin
+
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -PILA VACIA- ');
+
+  end;
+
+End;
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+  MostrarPila('Pila: ', P, memo1);
+end;
+
+
+//------------------------------------------------------------------------------
+//INVERTIR PILA
+
+Function InvertirPila(Var P: Pila): Pila;
+var
+  PAux, PR: Pila;
+  X: TipoElemento;
+begin
+  PAux.Crear(P.DatoDeLaClave, P.SizeStack);
+  PR.Crear(P.DatoDeLaClave, P.SizeStack);
+  while (not P.EsVacia) do begin
+
+  end;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  if (not P.EsVacia) then begin
+    PInvertida.Crear(P.DatoDeLaClave, P.SizeStack);
+    PInvertida:= InvertirPila(P);
+    MostrarPila('Pila invertida', PInvertida, memo1);
+  end else
+    memo1.Lines.Add('Pila vacía');
+end;
+
+end.

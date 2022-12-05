@@ -17,6 +17,7 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    Label6: TLabel;
     Button1: TButton;
     Edit1: TEdit;
     Button2: TButton;
@@ -47,7 +48,6 @@ type
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
-    procedure Button10Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -478,14 +478,10 @@ begin
     X1:= P.Recuperar;
     X2:= P2.Recuperar;
     if (X1.Clave = X2.Clave) then begin
-      PAux.Apilar(X1);
-      P.DesApilar;
-      P2.DesApilar;
+
     end else
       Iguales:= False;
   end;
-  P.InterCambiar(PAux, False);
-  Result:= Iguales;
 end;
 
 procedure TForm1.Button9Click(Sender: TObject);
@@ -497,18 +493,6 @@ begin
       memo1.Lines.Add('La pila no es palíndromo');
   end else
     memo1.Lines.Add('Pila vacía');
-end;
-
-
-//------------------------------------------------------------------------------
-//Contar elementos de una pila
-
-procedure TForm1.Button10Click(Sender: TObject);
-begin
-  if (not P.EsVacia) then begin
-    memo1.Lines.Add('La cantidad de elementos en la pila es: ' + CantidadElementos(P).ToString);
-  end else
-    memo1.Lines.Add('La cantidad de elementos en la pila es 0');
 end;
 
 end.

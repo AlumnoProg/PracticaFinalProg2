@@ -1,0 +1,107 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 402
+  ClientWidth = 602
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 8
+    Top = 10
+    Width = 96
+    Height = 13
+    Caption = 'Longitud de la pila : '
+  end
+  object Label2: TLabel
+    Left = 8
+    Top = 87
+    Width = 97
+    Height = 13
+    Caption = 'Elemento a cargar : '
+  end
+  object Edit1: TEdit
+    Left = 8
+    Top = 29
+    Width = 137
+    Height = 21
+    MaxLength = 4
+    NumbersOnly = True
+    TabOrder = 0
+  end
+  object Button1: TButton
+    Left = 8
+    Top = 56
+    Width = 137
+    Height = 25
+    Caption = 'Definir pila'
+    TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 8
+    Top = 133
+    Width = 137
+    Height = 44
+    Caption = 'Cargar en pila'
+    TabOrder = 2
+  end
+  object Edit2: TEdit
+    Left = 8
+    Top = 106
+    Width = 137
+    Height = 21
+    MaxLength = 255
+    TabOrder = 3
+  end
+  object Button3: TButton
+    Left = 8
+    Top = 183
+    Width = 137
+    Height = 63
+    Caption = 'Mostrar Contenido pila'
+    TabOrder = 4
+  end
+  object Memo1: TMemo
+    Left = 151
+    Top = 11
+    Width = 447
+    Height = 390
+    Lines.Strings = (
+      'Memo1')
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 5
+  end
+  object Button4: TButton
+    Left = 8
+    Top = 252
+    Width = 137
+    Height = 63
+    Caption = 'Invertir pila'
+    TabOrder = 6
+  end
+  object Button5: TButton
+    Left = 8
+    Top = 321
+    Width = 137
+    Height = 25
+    Caption = 'Limpiar Pantalla'
+    TabOrder = 7
+  end
+  object Button6: TButton
+    Left = 8
+    Top = 352
+    Width = 137
+    Height = 49
+    Caption = 'Invertir Pila Recursivo'
+    TabOrder = 8
+    WordWrap = True
+  end
+end

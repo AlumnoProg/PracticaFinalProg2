@@ -44,6 +44,10 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -58,6 +62,34 @@ var
 implementation
 
 {$R *.dfm}
+
+
+
+Procedure MostrarPila(Cartel: String; Var P: Pila; memo1: Tmemo);
+var
+  X: TipoElemento;
+  PAux: Pila;
+  Posicion: Integer;
+begin
+
+  Posicion:= 1;
+  memo1.Lines.Add(' ');
+  memo1.Lines.Add('---|| ' + Cartel + ' ||---');
+  if (not P.EsVacia) then begin
+    PAux.Crear(P.DatoDeLaClave, P.SizeStack);
+    memo1.Lines.Add(' ');
+    while (not P.EsVacia) do begin
+      X:= P.Recuperar;
+      memo1.Lines.Add('Posicion:' + Posicion.ToString + '          Dato: ' + VarToStr(X.Clave));
+      PAux.Apilar(X);
+      P.DesApilar;
+      Inc(Posicion);
+    end;
+    P.InterCambiar(PAux, False);
+  end else
+    memo1.lines.Add('Pila vacía');
+
+end;
 
 
 //------------------------------------------------------------------------------
@@ -233,14 +265,23 @@ begin
 
 end;
 
-Function ColocarAlFinal(var P: Pila): Boolean;
+Function ColocarAlFinal(Elemento: String; var P: Pila): Boolean;
 var
   X: TipoElemento;
   PAux: Pila;
 begin
   if (not P.EsLlena) then begin
     PAux.Crear(P.DatoDeLaClave, P.SizeStack);
-  end;
+    PAux.InterCambiar(P, False);
+    X.Clave:= StrToInt(Elemento);
+    if (P.Apilar(X) = OK) then begin
+      Result:= True;
+    end else begin
+      Result:= False;
+    end;
+    P.InterCambiar(PAux, False);
+  end else
+    Result:= False;
 end;
 
 procedure TForm1.Button5Click(Sender: TObject);
@@ -259,6 +300,173 @@ begin
       memo1.Lines.Add('Error, ingrese un numero entero');
   end else
     memo1.Lines.Add('Pila llena');
+end;
+
+
+//------------------------------------------------------------------------------
+//BOTON DE ELIMINAR TODAS LAS OCURRENCIAS
+
+Function BuscarElementoBoolean(Elemento: Integer; Var P: Pila): Boolean;
+var
+  X: TipoElemento;
+  PAux: Pila;
+  Encontrado: Boolean;
+begin
+
+  PAux.Crear(P.DatoDeLaClave, P.SizeStack);
+  Encontrado:= False;
+  while (not P.EsVacia) and (not Encontrado) do begin
+    X:= P.Recuperar;
+    if (X.Clave = Elemento) then begin
+      Encontrado:= True;
+    end else begin
+      PAux.Apilar(X);
+      P.DesApilar;
+    end;
+  end;
+  P.InterCambiar(PAux, False);
+  BuscarElementoBoolean:= Encontrado;
+
+end;
+
+Procedure EliminarTodaOcurrencia(Elemento: Integer; Var P: Pila);
+var
+  PAux: Pila;
+  X: TipoElemento;
+begin
+  PAux.Crear(P.DatoDeLaClave, P.SizeStack);
+  while (not P.EsVacia) do begin
+    X:= P.Recuperar;
+    if (X.Clave = Elemento) then begin
+      P.DesApilar;
+    end else begin
+      PAux.Apilar(X);
+      P.DesApilar;
+    end;
+  end;
+  P.InterCambiar(PAux, False);
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+var
+  Edit: Integer;
+begin
+
+  if (not P.EsVacia) then begin
+    if (ValidarEdit(edit8.Text)) then begin
+      Edit:= StrToInt(edit8.Text);
+      if (BuscarElementoBoolean(Edit, P)) then begin
+        EliminarTodaOcurrencia(Edit, P);
+        memo1.Lines.Add('Elemento Eliminado con éxito');
+      end else
+        memo1.Lines.Add('No se encontraron ocurrencias del elemento ' + edit8.Text);
+    end else
+      memo1.Lines.Add('Error, ingrese un numero entero');
+  end else
+    memo1.Lines.Add('Pila vacía');
+end;
+
+
+//------------------------------------------------------------------------------
+//Intercambiar valores de Tope y Fondo de la pila
+
+Procedure IntercambiarTopeFondo(var P: Pila);
+var
+  Tope, Fondo: TipoElemento;
+  PAux: Pila;
+begin
+  PAux.Crear(P.DatoDeLaClave, P.SizeStack);
+  Tope:= P.Recuperar;
+  P.DesApilar;
+  PAux.InterCambiar(P, False);
+  Fondo:= PAux.Recuperar;
+  PAux.DesApilar;
+  P.Apilar(Tope);
+  P.InterCambiar(PAux, False);
+  P.Apilar(Fondo);
+end;
+
+procedure TForm1.Button7Click(Sender: TObject);
+begin
+  if (not P.EsVacia) then begin
+    if (CantidadElementos(P) > 1) then begin
+      IntercambiarTopeFondo(P);
+      memo1.Lines.Add('Tope y fondo intercambiados exitosamente');
+    end else
+      memo1.Lines.Add('No es posible realiza esta accioón ya que la Pila solo tiene un elemento');
+  end else
+    memo1.Lines.Add('Pila vacía');
+end;
+
+
+//------------------------------------------------------------------------------
+//Duplicar contenido de una pila
+
+Function CopiarPila(P: Pila): Pila;
+var
+  X: TipoElemento;
+  PCopia, PAux: Pila;
+begin
+  PAux.Crear(P.DatoDeLaClave, P.SizeStack);
+  PCopia.Crear(P.DatoDeLaClave, P.SizeStack);
+  PAux.InterCambiar(P, False);
+  while (not PAux.EsVacia) do begin
+    X:= PAux.Recuperar;
+    P.Apilar(X);
+    PCopia.Apilar(X);
+    PAux.DesApilar;
+  end;
+  Result:= PCopia;
+end;
+
+Function DuplicarPila(var P: Pila): Pila;
+var
+  X: TipoElemento;
+  PAux1, PAux2, PR: Pila;
+begin
+  PAux1.Crear(P.DatoDeLaClave, P.SizeStack);
+  PAux2.Crear(P.DatoDeLaClave, P.SizeStack);
+  PR.Crear(P.DatoDeLaClave, P.SizeStack*2);
+  while (not P.EsVacia) do begin
+    X:= P.Recuperar;
+    PAux1.Apilar(X);
+    PAux2.Apilar(X);
+    P.DesApilar;
+  end;
+  PR.InterCambiar(PAux1, False);
+  PR.InterCambiar(PAux2, False);
+  Result:= PR;
+end;
+
+procedure TForm1.Button8Click(Sender: TObject);
+var
+  PCopiada, PDuplicada: Pila;
+begin
+
+  if (not P.EsVacia) then begin
+    if (CantidadElementos(P) <= 1000) then begin
+      PCopiada:= CopiarPila(P);
+      PDuplicada:= DuplicarPila(PCopiada);
+      MostrarPila('Pila Duplicada ', PDuplicada, memo1);
+    end else
+      memo1.Lines.Add('La pila no se puede duplicar porque excedería la cantidad de elementos posibles');
+  end else
+    memo1.Lines.Add('Pila vacía');
+end;
+
+
+//------------------------------------------------------------------------------
+//Es Palindromo
+
+procedure TForm1.Button9Click(Sender: TObject);
+begin
+  if (not P.EsVacia) then begin
+    if (EsPalindromo(P)) then
+      memo1.Lines.Add('La pila es palíndromo')
+    else
+      memo1.Lines.Add('La pila no es palíndromo');
+  end else
+    memo1.Lines.Add('Pila vacía');
 end;
 
 end.
