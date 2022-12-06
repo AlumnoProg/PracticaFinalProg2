@@ -1,0 +1,75 @@
+unit Ej3;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, ConjuntosAVL, Vcl.StdCtrls;
+
+Const MaxConjunto = 2000;
+
+type
+  TForm1 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Memo1: TMemo;
+    Edit1: TEdit;
+    Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    Edit2: TEdit;
+    Button6: TButton;
+    Button7: TButton;
+    procedure Button6Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  C,C2,C3: Conjunto;
+  Largo: Integer;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.Button6Click(Sender: TObject);
+begin
+  if ValidarLargo (Edit2.Text) then
+    begin
+      Largo:= StrToint (Edit2.Text);
+      C.Crear(Cadena,Largo);
+      C2.Crear(Cadena,Largo);
+      C3.Crear(Cadena,Largo);
+      Memo1.Clear;
+      Memo1.Lines.Add('- CONJUNTOS SETEADOS CON EXITO. -');
+      Memo1.Lines.Add(' ');
+      if largo = 0  then
+        Memo1.Lines.Add('- EL LARGO INGRESADO NO PERMITE INGRESO DE DATOS.');
+      if ( Largo > (MaxConjunto/3) ) then
+        Memo1.Lines.Add('-AVISO : EL PROCEDIMIENTO " UNION " NO ADMITE UN LARGO MAYOR A (MAXSIZE / 3) .');
+      Button1.Enabled:= True;
+      Button2.Enabled:= True;
+      Button3.Enabled:= True;
+      Button4.Enabled:= True;
+      Button5.Enabled:= True;
+      Button7.Enabled:= True;
+    end
+      Else
+        begin
+          Memo1.Lines.Add('- LARGO INVALIDO. -');
+          Memo1.Lines.Add('');
+          Memo1.Lines.Add('- VALORES PERMITIDOS. -');
+          Memo1.Lines.Add('');
+          Memo1.Lines.Add('- ENTEROS ENTRE 0 Y '+MaxConjunto.ToString+'. -');
+        end;
+end;
+
+end.

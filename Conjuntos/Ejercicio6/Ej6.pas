@@ -1,0 +1,261 @@
+unit Ej6;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, ConjuntosAVL, Vcl.StdCtrls;
+
+Const MaxEntero = 9999999;
+      MaxCadena = 255;
+      MaxConjunto = 2000;
+
+type
+  TForm1 = class(TForm)
+    Edit2: TEdit;
+    Button1: TButton;
+    Edit3: TEdit;
+    Button2: TButton;
+    Edit4: TEdit;
+    Button3: TButton;
+    Edit5: TEdit;
+    Button4: TButton;
+    Memo1: TMemo;
+    Button5: TButton;
+    Button6: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+  Estado = (TOTAL, PARCIAL, NO);
+
+var
+  Form1: TForm1;
+  CA, CB, CC: Conjunto;
+
+implementation
+
+{$R *.dfm}
+
+
+//------------------------------------------------------------------------------
+//DEFINIR CONJUNTOS
+
+Function ValidarLongitud(AValidar: String; Var Validado: Integer): Boolean;
+Begin
+
+  ValidarLongitud:= False;
+  if(TryStrToInt(AValidar, Validado))
+  and((1<=Validado)and(Validado<=MaxConjunto))then
+    ValidarLongitud:= True;
+
+End;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  Longitud: Integer;
+begin
+  if (ValidarLongitud(Edit2.Text, Longitud)) then begin
+    CA.Crear(Cadena, Longitud);
+    CB.Crear(Cadena, Longitud);
+    CC.Crear(Cadena, Longitud);
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -CONJUNTOS SETEADOS/RESETEADOS- ');
+  end else begin
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -INGRESE VALORES PERMITIDOS- ');
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' Ingrese valor entero entre 1 y '+MaxConjunto.ToString+'. ');
+  end;
+end;
+
+
+//------------------------------------------------------------------------------
+//CARGAR CONJUNTO A
+
+Function EsSinEspacios(S: String): Boolean;
+Var Posicion: Integer;
+Begin
+
+  Posicion:= 1;
+  EsSinEspacios:= False;
+  while(Posicion<=Length(S))and(S[Posicion]<>' ')do
+    Inc(Posicion);
+  if(Posicion>Length(S))then EsSinEspacios:= True;
+
+End;
+
+Function ValidarCadena(NCadena: String; Var Validado: String): Boolean;
+Begin
+
+  ValidarCadena:= False;
+
+  if(Ncadena<>'')and(EsSinEspacios(NCadena))
+  and((1<=Length(NCadena))and(Length(NCadena)<=MaxCadena))then begin
+    Validado:= NCadena;
+    ValidarCadena:= True;
+
+  end;
+
+End;
+
+Function CargarElemento(AListar: String; Var C: Conjunto): Boolean;
+Var TeL: TipoElemento;
+    ValidadoN: LongInt;
+    ValidadoC: String;
+Begin
+
+  CargarElemento:= False;
+  if(ValidarCadena(AListar, ValidadoC))then begin
+    TeL.Clave:= ValidadoC;
+    if(C.Agregar(TeL)<>ClaveDuplicada)then
+        CargarElemento:= True;
+  end;
+
+End;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+  if(Not CA.EsLLeno)then begin
+    if(CargarElemento(Edit3.Text, CA))then
+      memo1.Lines.Add(edit3.Text + ' cargado en el conjunto A')
+    else begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -INGRESE VALOR PERMITIDO- ');
+    end;
+  end else
+    Memo1.Lines.Add(' -CONJUNTO A LLENO- ');
+  edit3.Clear;
+end;
+
+
+//------------------------------------------------------------------------------
+//CARGAR CONJUNTO B
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+  if(Not CB.EsLLeno)then begin
+    if(CargarElemento(Edit4.Text, CB))then
+      memo1.Lines.Add(edit4.Text + ' cargado en el conjunto B')
+    else begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -INGRESE VALOR PERMITIDO- ');
+    end;
+  end else
+    Memo1.Lines.Add(' -CONJUNTO B LLENO- ');
+  edit4.Clear;
+end;
+
+
+//------------------------------------------------------------------------------
+//CARGAR CONJUNTO C
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  if(Not CC.EsLLeno)then begin
+    if(CargarElemento(Edit5.Text, CC))then
+      memo1.Lines.Add(edit5.Text + ' cargado en el conjunto C')
+    else begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -INGRESE VALOR PERMITIDO- ');
+    end;
+  end else
+    Memo1.Lines.Add(' -CONJUNTO C LLENO- ');
+  edit5.Clear;
+end;
+
+
+//------------------------------------------------------------------------------
+//VER CONJUNTOS
+
+Procedure MostrarConjunto(Cartel: String; C: Conjunto; Memo1: TMemo);
+Begin
+
+  Memo1.Lines.Add(' ');
+  Memo1.Lines.Add(' || '+Cartel+' ||');
+  if(Not C.EsVacio)then begin
+    Memo1.Lines.Add(C.RetornarClaves);
+  end else begin
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -CONJUNTO VACIO- ');
+  end;
+
+End;
+
+procedure TForm1.Button5Click(Sender: TObject);
+begin
+  memo1.Lines.Add(' ');
+  MostrarConjunto('Conjunto A', CA, Memo1);
+  memo1.Lines.Add(' ');
+  MostrarConjunto('Conjunto B', CB, Memo1);
+  memo1.Lines.Add(' ');
+  MostrarConjunto('Conjunto C', CC, Memo1);
+  memo1.Lines.Add(' ');
+end;
+
+
+//------------------------------------------------------------------------------
+//SUBCONJUNTO PARCIAL O TOTAL
+
+Function esSubConjunto(C1, C2: Conjunto): Estado;
+var
+  CR: Conjunto;
+begin
+
+  esSubConjunto:= NO;
+  if((C1.EsVacio)and(Not C2.EsVacio))or((C1.EsVacio)and(C2.EsVacio))then
+    EsSubConjunto:= TOTAL
+  else begin
+    CR:= C1.Interseccion(C2);
+    if (not CR.EsVacio) then begin
+      if (CR.CantidadElementos = C1.CantidadElementos) then
+        esSubConjunto:= TOTAL
+      else
+        if (CR.CantidadElementos >= (C1.CantidadElementos / 2)) then
+          esSubConjunto:= PARCIAL;
+    end;
+  end;
+
+end;
+
+Procedure VerSiEsSubConjunto(Cartel1, Cartel2: String; Var C1, C2: Conjunto; memo1: Tmemo);
+var
+  Relacion: Estado;
+begin
+
+  Relacion:= esSubConjunto(C1, C2);
+  if (Relacion = TOTAL) then begin
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -El conjunto '+Cartel1+' es subconjunto total del conjunto '+Cartel2+'. ');
+  end else begin
+    if (Relacion = PARCIAL) then begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -El conjunto '+Cartel1+' es subconjunto parcial del conjunto '+Cartel2+'. ');
+    end else begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -EL CONJUNTO '+Cartel1+' NO ES SUBCONJUNTO DEL CONJUNTO '+Cartel2+' -');
+    end;
+  end;
+
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+begin
+  VerSiEsSubConjunto('A', 'B', CA, CB, Memo1);
+  VerSiEsSubConjunto('A', 'C', CA, CC, Memo1);
+  VerSiEsSubConjunto('B', 'A', CB, CA, Memo1);
+  VerSiEsSubConjunto('B', 'C', CB, CC, Memo1);
+  VerSiEsSubConjunto('C', 'A', CC, CA, Memo1);
+  VerSiEsSubConjunto('C', 'B', CC, CB, Memo1);
+
+end;
+
+end.

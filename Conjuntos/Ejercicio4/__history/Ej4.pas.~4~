@@ -1,0 +1,64 @@
+unit Ej4;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, ConjuntosAVL, Vcl.StdCtrls, ListPointer;
+
+Const
+  MaxConjunto = 26;
+
+type
+  TForm1 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Edit1: TEdit;
+    Button1: TButton;
+    Memo1: TMemo;
+    Edit2: TEdit;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  C: Conjunto;
+
+implementation
+
+{$R *.dfm}
+
+//------------------------------------------------------------------------------
+//CREAR CONJUNTO
+
+Function ValidarLongitud(Edit: String;Var Longitud: Integer): Boolean;
+begin
+
+  ValidarLongitud:= False;
+  if (TryStrToInt(Edit, Longitud)) and (Longitud >= 1) and (Longitud <= MaxConjunto) then
+    ValidarLongitud:= True;
+
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  Longitud: Integer;
+begin
+
+  if (ValidarLongitud(edit1.Text, Longitud)) then begin
+    C.Crear(Cadena, Longitud);
+    memo1.Lines.Add('Conjunto creado con éxito');
+  end else
+    memo1.Lines.Add('Error, ingrese un numero entero como logitud, máximo: 26');
+end;
+
+end.
