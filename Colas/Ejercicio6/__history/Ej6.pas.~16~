@@ -1,0 +1,291 @@
+unit Ej6;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, QueuesArray, Vcl.StdCtrls;
+
+Const MaxCadena = 255;
+      MaxCola = 2000;
+
+type
+  TForm1 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Edit1: TEdit;
+    Button1: TButton;
+    Memo1: TMemo;
+    Edit2: TEdit;
+    Button2: TButton;
+    Button3: TButton;
+    Edit3: TEdit;
+    Button4: TButton;
+    Button5: TButton;
+    Button6: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  C1, C2: Cola;
+
+implementation
+
+{$R *.dfm}
+
+
+//------------------------------------------------------------------------------
+//DEFINIR COLA
+
+Function ValidarLongitud(AValidar: String; Var Validado: Integer): Boolean;
+Begin
+
+  ValidarLongitud:= False;
+  if(TryStrToInt(AValidar, Validado))and(1<=Validado)and(Validado<=MaxCola)then
+    ValidarLongitud:= True;
+
+End;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  Longitud: Integer;
+begin
+  if(ValidarLongitud(Edit1.Text, Longitud))then begin
+    if(C1.MaxSizeQueue=MaxCola)then begin
+      C1.Crear(Cadena, Longitud);
+      C2.Crear(Cadena, Longitud);
+    end else begin
+      C1.Crear(Cadena, Longitud+1);
+      C2.Crear(Cadena, Longitud+1);
+    end;
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -COLAS DEFINIDAS- ');
+  end else begin
+
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -INGRESE VALORES PERMITIDOS- ');
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' Ingrese valor entero entre 1 y '+MaxCola.ToString+'. ');
+
+  end;
+end;
+
+
+//------------------------------------------------------------------------------
+//CARGAR COLA 1
+
+Function SinEspacios(S: String): Boolean;
+Var Posicion: Integer;
+
+Begin
+
+  Posicion:= 1;
+  SinEspacios:= False;
+  while(Posicion<=Length(S))and(S[Posicion]<>' ')do
+    Inc(Posicion);
+  if(Posicion>Length(S))then SinEspacios:= True;
+
+End;
+
+Function ValidarEdit(Edit: String): Boolean;
+begin
+
+  ValidarEdit:= False;
+  if(Edit<>'')and(SinEspacios(Edit)) and (1<=Length(Edit))and(Length(Edit)<=MaxCadena)then
+    ValidarEdit:= True;
+
+end;
+
+Function CargarCola(Edit: String; Var C: Cola): Boolean;
+var
+  X: TipoElemento;
+begin
+
+  CargarCola:= False;
+  if (ValidarEdit(Edit)) then begin
+    X.Clave:= Edit;
+    if (C.Encolar(X) = OK) then
+      CargarCola:= True;
+  end;
+
+
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+  if (not C1.EsLlena) then begin
+    if (CargarCola(edit2.Text, C1)) then begin
+      memo1.Lines.Add(edit2.Text + ' cargado en la cola 1');
+    end else
+      memo1.Lines.Add('Error, ingrese los datos correctamente');
+  end else
+    memo1.Lines.Add('Cola 1 llena');
+end;
+
+
+//------------------------------------------------------------------------------
+//CARGAR COLA 2
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+  if (not C2.EsLlena) then begin
+    if (CargarCola(edit3.Text, C2)) then begin
+      memo1.Lines.Add(edit3.Text + ' cargado en la cola 2');
+    end else
+      memo1.Lines.Add('Error, ingrese los datos correctamente');
+  end else
+    memo1.Lines.Add('Cola 2 llena')
+end;
+
+
+//------------------------------------------------------------------------------
+//MOSTRAR COLA
+
+Procedure MostrarCola(Cartel: String; Var C: Cola; Memo1: TMemo);
+Var TeC: TipoElemento;
+    CAux: Cola;
+    Posicion: Integer;
+
+Begin
+
+  Posicion:= 1;
+
+  Memo1.Lines.Add(' ');
+  Memo1.Lines.Add(' || '+Cartel+' ||');
+  if(Not C.EsVacia)then begin
+
+    CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+
+    Memo1.Lines.Add(' ');
+    while(Not C.EsVacia)do begin
+
+      TeC:= C.Recuperar;
+      Memo1.Lines.Add(' Posicion : '+Posicion.ToString+' | Elemento : '+VarToStr(TeC.Clave));
+      CAux.Encolar(TeC);
+      C.DesEncolar;
+      Inc(Posicion);
+
+    end;
+
+    C.InterCambiar(CAux, False);
+
+  end else begin
+
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -COLA VACIA-');
+
+  end;
+
+End;
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  memo1.Lines.Add(' ');
+  MostrarCola('Cola 1',C1, memo1);
+  memo1.Lines.Add(' ');
+  MostrarCola('Cola 2',C2, memo1);
+end;
+
+
+//------------------------------------------------------------------------------
+//VER SI SON IGUALES
+
+Function SetearCola(Var C: Cola): Cola;
+Var TeC: TipoElemento;
+    CAux: Cola;
+Begin
+  CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+  while(Not C.EsVacia)do begin
+    TeC:= C.Recuperar;
+    TeC.Valor1:= True;
+    CAux.Encolar(TeC);
+    C.DesEncolar;
+  end;
+  C.InterCambiar(CAux, False);
+  SetearCola:= C;
+End;
+
+Function CambiarRecurrencias(Elemento: TipoElemento; Var C: Cola): Cola;
+var
+  X: TipoElemento;
+  CAux: Cola;
+begin
+  CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+  while (not C.EsVacia) do begin
+
+  end;
+  C.InterCambiar(CAux, False);
+  Result:= C;
+end;
+
+Function EsIgual(Var C1, C2: Cola): boolean;
+var
+  X1, X2: TipoElemento;
+  C1Aux, C2Aux: Cola;
+begin
+  C1:= SetearCola(C1);
+  C2:= SetearCola(C2);
+  C1Aux.Crear(C1.DatoDeLaClave, C1.SizeQueue);
+  C2Aux.Crear(C2.DatoDeLaClave, C2.SizeQueue);
+  while (not C1.EsVacia) do begin
+    X1:= C1.Recuperar;
+    if (X1.Valor1 = True) then begin
+      while (not C2.EsVacia) do begin
+        X2:= C2.Recuperar;
+        if (X1.Clave = X2.Clave) and (X1.Valor1 = True) then begin
+          X1.Valor1:= False;
+          X2.Valor1:= False;
+          C1:= CambiarRecurrencias(X1, C1);
+          C2:= CambiarRecurrencias(X1, C2);
+        end;
+        C2Aux.Encolar(X2);
+        C2.DesEncolar;
+      end;
+      C2.InterCambiar(C2Aux, False);
+    end;
+    C1Aux.Encolar(X1);
+    C1.DesEncolar;
+  end;
+end;
+
+procedure TForm1.Button5Click(Sender: TObject);
+begin
+  if (not C1.EsVacia) and (not C2.EsVacia) then begin
+    if (EsIgual(C1, C2)) then begin
+      memo1.Lines.Add('Las colas contienen los mismos elementos');
+    end else
+      memo1.Lines.Add('Las colas NO contienen los mismos elementos');
+  end else begin
+    if(Not C1.EsVacia)and(C2.EsVacia)then begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -COLA 2 VACIA- ');
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' Ingrese valores en la cola 2 para evaluarla. ');
+    end;
+    if(C1.EsVacia)and(Not C2.EsVacia)then begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -COLA 1 VACIA- ');
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' Ingrese valores en la cola 1 para evaluarla. ');
+    end;
+    if(C1.EsVacia)and(C2.EsVacia)then begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -COLAS VACIAS- ');
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' Ingrese valores en las colas para evaluarlas. ');
+    end;
+  end;
+end;
+
+end.
