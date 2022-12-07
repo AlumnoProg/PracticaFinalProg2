@@ -19,10 +19,12 @@ type
     Button4: TButton;
     Edit2: TEdit;
     Button5: TButton;
+    Button6: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -234,6 +236,50 @@ begin
   if (not C.EsVacia) then begin
     CDivisores.Crear(C.DatoDeLaClave, C.SizeQueue);
     CDivisores:= DivisoresTotales(C, CCopia, S);
+    if (not CDivisores.EsVacia) then begin
+      memo1.Lines.Add(' ');
+      MostrarCola('Divisores Totlaes: ', CDivisores, memo1);
+    end else
+      memo1.Lines.Add('No se encontró ningún divisor total');
+  end else
+    memo1.Lines.Add('Cola vacía');
+end;
+
+
+//------------------------------------------------------------------------------
+//Divisores recursivos
+
+Function DivisoresTotalesRec(Var C, CCopia: Cola; Var S: String): Cola;
+var
+  CAux, CR: Cola;
+  Procedure Recorrer(Var CAux, CR: Cola);
+  var
+    X: TipoElemento;
+  begin
+    if (not C.EsVacia) then begin
+      X:= C.Recuperar;
+      if (Divisor(CCopia, X)) then
+        CR.Encolar(X);
+      CAux.Encolar(X);
+      Recorrer(CAux, CR);
+    end;
+  end;
+begin
+  CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+  CR.Crear(C.DatoDeLaClave, C.SizeQueue);
+  Recorrer(CAux, CR);
+  C.InterCambiar(CAux, False);
+  Result:= CR;
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+var
+  S: String;
+  CDivisores: Cola;
+begin
+  if (not C.EsVacia) then begin
+    CDivisores.Crear(C.DatoDeLaClave, C.SizeQueue);
+    CDivisores:= DivisoresTotalesRec(C, CCopia, S);
     if (not CDivisores.EsVacia) then begin
       memo1.Lines.Add(' ');
       MostrarCola('Divisores Totlaes: ', CDivisores, memo1);

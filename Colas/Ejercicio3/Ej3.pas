@@ -25,11 +25,13 @@ type
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
+    Button7: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -250,6 +252,71 @@ procedure TForm1.Button5Click(Sender: TObject);
 begin
   if (not C1.EsVacia) and (not C2.EsVacia) then begin
     if (EsIgual(C1, C2)) then begin
+      Memo1.Lines.Add(' La cola 1 es igual a la cola 2. ');
+    end else
+      Memo1.Lines.Add(' La cola 1 no es igual a la cola 2. ')
+  end else begin
+    if(Not C1.EsVacia)and(C2.EsVacia)then begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -COLA 2 VACIA- ');
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' Ingrese valores en la cola 2 para evaluarla. ');
+    end;
+    if(C1.EsVacia)and(Not C2.EsVacia)then begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -COLA 1 VACIA- ');
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' Ingrese valores en la cola 1 para evaluarla. ');
+    end;
+    if(C1.EsVacia)and(C2.EsVacia)then begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -COLAS VACIAS- ');
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' Ingrese valores en las colas para evaluarlas. ');
+    end;
+  end;
+end;
+
+
+//------------------------------------------------------------------------------
+//Ver si son iguales Recursivo
+
+Function EsIgualRec(var C1, C2: Cola): Boolean;
+var
+  CAux: Cola;
+  Igual: Boolean;
+  Procedure Recorrer(Var C1, C2, CAux: Cola; Var Flag: Boolean);
+  var
+    X1, X2: TipoElemento;
+  begin
+    if (not C1.EsVacia) and (not C2.EsVacia) and (Flag) then begin
+      X1:= C1.Recuperar;
+      X2:= C2.Recuperar;
+      if (X1.Clave <> X2.Clave) then
+        Flag:= False
+      else begin
+        CAux.Encolar(X1);
+        C1.DesEncolar;
+        C2.DesEncolar;
+      end;
+      Recorrer(C1, C2, CAux, Flag);
+    end;
+  end;
+begin
+  CAux.Crear(C1.DatoDeLaClave, C1.SizeQueue);
+  Igual:= True;
+  Recorrer(C1, C2, CAux, Igual);
+  if (C1.EsVacia) and (C2.EsVacia) then
+    EsIgualRec:= True
+  else
+    EsIgualRec:= False;
+  DevolverElementos(C1, C2, CAux);
+end;
+
+procedure TForm1.Button7Click(Sender: TObject);
+begin
+  if (not C1.EsVacia) and (not C2.EsVacia) then begin
+    if (EsIgualRec(C1, C2)) then begin
       Memo1.Lines.Add(' La cola 1 es igual a la cola 2. ');
     end else
       Memo1.Lines.Add(' La cola 1 no es igual a la cola 2. ')

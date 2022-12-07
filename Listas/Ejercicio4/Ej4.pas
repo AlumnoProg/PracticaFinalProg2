@@ -21,11 +21,13 @@ type
     Button5: TButton;
     Button6: TButton;
     Memo1: TMemo;
+    Button7: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -188,6 +190,80 @@ procedure TForm1.Button5Click(Sender: TObject);
 begin
   if (not L1.EsVacia) and (not L2.EsVacia) then begin
     if (esIgual(L1, l2)) and (esIgual(L2, L1)) then begin
+      memo1.Lines.Add('Las listas son iguales');
+    end else
+      memo1.Lines.Add('Las listas no son iguales');
+  end else begin
+    if(Not L1.EsVacia)and(L2.EsVacia)then begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -LISTA 2 VACIA- ');
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' Ingrese valores en las lista 2 para evaluarlas. ');
+    end;
+    if(L1.EsVacia)and(Not L2.EsVacia)then begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -LISTA 1 VACIA- ');
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' Ingrese valores en las lista 1 para evaluarlas. ');
+    end;
+    if(L1.EsVacia)and(L2.EsVacia)then begin
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -LISTAS VACIAS- ');
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' Ingrese valores en las listas para evaluarlas. ');
+    end;
+  end;
+end;
+
+
+//------------------------------------------------------------------------------
+//Iguales Recursivo
+
+Procedure RecorrerL2(P: PosicionLista; Elemento: TipoElemento;Var Iguales: Boolean);
+var
+  X: TipoElemento;
+begin
+  if (P <> NULO) and (not Iguales) then begin
+    X:= L2.Recuperar(P);
+    if (X.Clave = Elemento.Clave) then
+      Iguales:= True;
+    P:= L2.Siguiente(P);
+    RecorrerL2(P, Elemento, Iguales);
+  end;
+end;
+
+Function esIgualRec(): Boolean;
+var
+  P1, P2: PosicionLista;
+  Iguales: Boolean;
+  Procedure RecorrerL1(P1, P2: PosicionLista; Var Flag: Boolean);
+  var
+    X: TipoElemento;
+    Iguales2: Boolean;
+  begin
+    if (P1 <> NULO) and (Flag) then begin
+      X:= L1.Recuperar(P1);
+      Iguales2:= False;
+      RecorrerL2(P2, X, Iguales2);
+      if (not Iguales2) then
+        Flag:= False;
+      P1:= L1.Siguiente(P1);
+      P2:= L2.Comienzo;
+      RecorrerL1(P1, P2, Flag);
+    end;
+  end;
+begin
+  Iguales:= True;
+  P1:= L1.Comienzo;
+  P2:= L2.Comienzo;
+  RecorrerL1(P1, P2, Iguales);
+  Result:= Iguales;
+end;
+
+procedure TForm1.Button7Click(Sender: TObject);
+begin
+  if (not L1.EsVacia) and (not L2.EsVacia) then begin
+    if (esIgualRec) and (esIgualRec) then begin
       memo1.Lines.Add('Las listas son iguales');
     end else
       memo1.Lines.Add('Las listas no son iguales');

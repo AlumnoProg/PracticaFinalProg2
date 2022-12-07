@@ -19,11 +19,13 @@ type
     Button5: TButton;
     Button6: TButton;
     Button7: TButton;
+    Button4: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -217,6 +219,61 @@ begin
   memo1.Lines.Add('Pila 2');
   memo1.Lines.Add(P2.RetornarClaves);
   memo1.Lines.Add('----------------------------------');
+end;
+
+
+//------------------------------------------------------------------------------
+//Son iguales recursivo
+
+Function SonIgualesRec():Boolean;
+var
+  Seguir: Boolean;
+  Procedure Recorrer(Var P: Pila; Var Seguir: Boolean);
+  var
+    X1, X2: TipoElemento;
+  begin
+    if (not P1.EsVacia) and (Seguir) then begin
+      X1:= P1.Recuperar;
+      X2:= P2.Recuperar;
+      if (X1.Clave = X2.Clave) then begin
+        P.Apilar(X1);
+        P1.DesApilar;
+        P2.DesApilar;
+      end else
+        Seguir:= False;
+      Recorrer(P, Seguir);
+    end;
+  end;
+begin
+  Seguir:= True;
+  PAux.Crear(P1.DatoDeLaClave, P1.SizeStack);
+  Recorrer(PAux, Seguir);
+  SonIguales2();
+  Result:= Seguir;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  if (not P1.EsVacia) and (not P2.EsVacia) then begin
+    if (Cant1 = Cant2) then begin
+      if (SonIgualesRec()) then begin
+        memo1.Lines.Add('Las pilas son iguales');
+      end else
+        memo1.Lines.Add('Las pilas no son iguales');
+    end else
+      memo1.Lines.Add('Las pilas tienen una cantidad de elementos distinta por lo tanto no son iguales');
+  end
+    else begin
+    if (P1.EsVacia=true)and (P2.EsVacia=true) then begin
+      memo1.Lines.Add('ambas Pilas están vacías')
+    end
+    else
+      if P1.EsVacia=true then
+        memo1.Lines.Add('Pila 1 está vacía, por lo que no son iguales')
+      else
+        if P2.EsVacia=true then
+          memo1.Lines.Add('Pila 2 está vacía, por lo que no son iguales');
+  end;
 end;
 
 end.

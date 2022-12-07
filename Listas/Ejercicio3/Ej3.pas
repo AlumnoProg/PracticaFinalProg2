@@ -10,7 +10,6 @@ type
   TForm1 = class(TForm)
     Label1: TLabel;
     Label2: TLabel;
-    Label3: TLabel;
     Edit1: TEdit;
     Button2: TButton;
     Button3: TButton;
@@ -21,18 +20,15 @@ type
     Button1: TButton;
     Button6: TButton;
     Memo1: TMemo;
-    Button8: TButton;
-    Edit4: TEdit;
-    Button9: TButton;
-    Edit5: TEdit;
     Button10: TButton;
-    Button11: TButton;
+    Button7: TButton;
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -161,7 +157,6 @@ begin
   end;
 end;
 
-
 procedure TForm1.Button8Click(Sender: TObject);
 begin
 
@@ -260,6 +255,62 @@ begin
             memo1.Lines.Add('Error, Lista 2 Vacía.');
   end;
 
+end;
+
+
+//------------------------------------------------------------------------------
+//Es divisible recursivo
+
+Function esDivisibleRec(): Boolean;
+var
+  Flag: Boolean;
+  P1, P2: PosicionLista;
+  Procedure Recorrer(P1, P2: PosicionLista; Var Bandera: Boolean);
+  var
+    X1, X2: TipoElemento;
+  begin
+    if (P1 <> NULO) and (Bandera = True) then begin
+      X1:= L1.Recuperar(P1);
+      X2:= L2.Recuperar(P2);
+      if ((X2.Clave mod X1.Clave) <> 0) then
+        Bandera:= False;
+      P1:= L1.Siguiente(P1);
+      P2:= L2.Siguiente(P2);
+      Recorrer(P1, P2, Bandera);
+    end;
+  end;
+begin
+  Flag:= True;
+  P1:= L1.Comienzo;
+  P2:= L2.Comienzo;
+  Recorrer(P1, P2, Flag);
+  Result:= Flag;
+end;
+
+procedure TForm1.Button7Click(Sender: TObject);
+begin
+   if (L1.EsVacia = False) and (L2.EsVacia = False) then begin
+    if (VerificarTamanio) then begin
+      if (VerificarCeros) then begin
+        if (esDivisibleRec) then begin
+          memo1.Lines.Add('La lista 2 es divisible por la lista 1');
+        end else
+          memo1.Lines.Add('La lista 2 NO es divisible por la lista 1');
+      end else
+        memo1.Lines.Add('Error, la lista 1 contiene ceros, y no es posible dividir por 0');
+    end else
+      memo1.Lines.Add('Error, la cantidad de datos en ambas listas es distinto');
+   end else
+   begin
+      if (L1.EsVacia=true)and (L2.EsVacia=true) then begin
+        memo1.Lines.Add('Ambas listas están vacías.')
+      end else
+        if L1.EsVacia=true then
+          memo1.Lines.Add('Error, Lista 1 Vacía.')
+        else
+          if L2.EsVacia=true then
+            memo1.Lines.Add('Error, Lista 2 Vacía.');
+   end;
 end;
 
 end.

@@ -23,10 +23,12 @@ type
     Memo1: TMemo;
     Button5: TButton;
     Label4: TLabel;
+    Button6: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -231,6 +233,67 @@ begin
 
   if (not C.EsVacia) then begin
     CUnicos:= ValoresUnicos(C);
+    if (not CUnicos.EsVacia) then begin
+      memo1.Lines.Add(' ');
+      MostrarCola('Cola Valores Únicos:', CUnicos, memo1);
+    end else begin
+      memo1.Lines.Add(' ');
+      memo1.Lines.Add('No hay valores únicos en la cola');
+    end;
+  end else
+    memo1.Lines.Add('Cola vacía');
+end;
+
+
+//------------------------------------------------------------------------------
+//Valores unicos recursivos
+
+Function ValoresUnicosRec(Var C: Cola): Cola;
+var
+  CAux, CR: Cola;
+  Cantidad: Integer;
+  Ultimo: TipoElemento;
+  Procedure Recorrer(Var CR, CAux: Cola; Var Cant: Integer; Var Ult: TipoElemento);
+  var
+    Act: TipoElemento;
+  begin
+    if (not C.EsVacia) then begin
+      Act:= C.Recuperar;
+      if (Ult.Clave = Act.Clave) then begin
+        Ult:= Act;
+        Inc(Cant);
+      end else begin
+        if (Cant = 1) then
+          CR.Encolar(Ult)
+        else
+          Cant:= 1;
+        Ult:= Act;
+      end;
+      CAux.Encolar(Act);
+      C.DesEncolar;
+      Recorrer(CR, CAux, Cant, Ult);
+    end;
+  end;
+begin
+  CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+  CR.Crear(C.DatoDeLaClave, C.SizeQueue);
+  Cantidad:= 1;
+  Ultimo:= C.Recuperar;
+  CAux.Encolar(Ultimo);
+  C.DesEncolar;
+  Recorrer(CR, CAux, Cantidad, Ultimo);
+  if (Cantidad = 1) then
+    CR.Encolar(Ultimo);
+  C.InterCambiar(CAux, False);
+  ValoresUnicosRec:= CR;
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+var
+  CUnicos: Cola;
+begin
+  if (not C.EsVacia) then begin
+    CUnicos:= ValoresUnicosRec(C);
     if (not CUnicos.EsVacia) then begin
       memo1.Lines.Add(' ');
       MostrarCola('Cola Valores Únicos:', CUnicos, memo1);

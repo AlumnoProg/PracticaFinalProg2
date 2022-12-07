@@ -21,10 +21,12 @@ type
     Memo1: TMemo;
     Button4: TButton;
     Button5: TButton;
+    Button6: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -170,6 +172,45 @@ begin
     PInvertida.Crear(P.DatoDeLaClave, P.SizeStack);
     PInvertida:= InvertirPila(P);
     MostrarPila('Pila invertida', PInvertida, memo1);
+  end else
+    memo1.Lines.Add('Pila vacía');
+end;
+
+
+//------------------------------------------------------------------------------
+//Invertir pila recursivo
+
+Function InvertirPilaRec(var P: Pila): Pila;
+var
+  PAux, PR: Pila;
+  Procedure Inv(Var P, PAux, PR: Pila);
+  var
+    X: TipoElemento;
+  begin
+    if (not P.EsVacia) then begin
+      X:= P.Recuperar;
+      PR.Apilar(X);
+      PAux.Apilar(X);
+      P.DesApilar;
+      Inv(P, PAux, PR);
+    end;
+  end;
+begin
+  PAux.Crear(P.DatoDeLaClave, P.SizeStack);
+  PR.Crear(P.DatoDeLaClave, P.SizeStack);
+  Inv(P, PAux, PR);
+  P.InterCambiar(PAux, False);
+  Result:= PR;
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+var
+  PI: Pila;
+begin
+  if (not P.EsVacia) then begin
+    PI.Crear(P.DatoDeLaClave, P.SizeStack);
+    PI:= InvertirPilaRec(P);
+    MostrarPila('Pila invertida', PI, memo1);
   end else
     memo1.Lines.Add('Pila vacía');
 end;
