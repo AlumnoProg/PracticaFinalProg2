@@ -1,0 +1,249 @@
+unit Ej3;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, ArbolesBinarios, QueuesPointer,
+  Vcl.StdCtrls;
+
+Const MaxEntero = 9999999;
+      MaxCadena = 255;
+
+type
+  TForm1 = class(TForm)
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Button1: TButton;
+    Memo1: TMemo;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Edit1: TEdit;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  A: Arbol;
+
+implementation
+
+{$R *.dfm}
+
+//------------------------------------------------------------------------------
+//CREAR ARBOL
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  A.Crear(Cadena, A.MaxSizeTree);
+  memo1.Lines.Add('Arbol creado con éxito');
+end;
+
+
+//------------------------------------------------------------------------------
+//CARGAR ARBOL
+
+Function SinEspacios(S: String): Boolean;
+Var Posicion: Integer;
+
+Begin
+
+  Posicion:= 1;
+  SinEspacios:= False;
+
+  while(Posicion<=Length(S))and(S[Posicion]<>' ')do
+    Inc(Posicion);
+
+  if(Posicion>Length(S))then SinEspacios:= True;
+
+End;
+
+Function ValidarCadena(NCadena: TipoElemento): Boolean;
+Begin
+
+  ValidarCadena:= False;
+  if(NCadena.Clave<>'')and(SinEspacios(NCadena.Clave))
+  and(Length(NCadena.Clave)<=MaxCadena)then
+    ValidarCadena:= True;
+
+End;
+
+Function ValidarCarga(): Boolean;
+var
+  Valido: Boolean;
+  Procedure Buscar(PA: PosicionArbol);
+  var
+    X: TipoElemento;
+  begin
+
+    if (not A.RamaNula(PA)) then begin
+      Buscar(PA^.HI);
+      X:= A.Recuperar(PA);
+      if (not ValidarCadena(X)) then
+        Valido:= False;
+      Buscar(PA^.HD);
+    end;
+
+  end;
+begin
+
+  Valido:= True;
+  Buscar(A.Root);
+  if (Valido) then
+    ValidarCarga:= True
+  else
+    ValidarCarga:= False;
+
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+  if (A.CargarArbol = OK) then begin
+    if (ValidarCarga) then begin
+      memo1.Lines.Add('Arbol cargado con éxito');
+    end else begin
+      memo1.Lines.Add('Error, ingrese valores permitidos');
+      A.Crear(Cadena, A.MaxSizeTree);
+    end;
+  end else
+    memo1.Lines.Add('Error, no se pudo cargar el arbol');
+end;
+
+
+//------------------------------------------------------------------------------
+//VER ARBOL
+
+Procedure MostrarArbol(Cartel: String;Var A: Arbol; memo1: Tmemo);
+begin
+
+  Memo1.Lines.Add(' ');
+  Memo1.Lines.Add(' || '+Cartel+' || ');
+  Memo1.Lines.Add(' ');
+  if (not A.EsVacio) then begin
+    Memo1.Lines.Add('Raíz: ' + A.Root.Datos.ArmarString);
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' ' + A.InOrden);
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add('Altura: ' + A.Altura.ToString);
+    Memo1.Lines.Add(' ');
+  end else
+    memo1.Lines.Add('Arbol vacío');
+
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+  memo1.Lines.Add(' ');
+  MostrarArbol('Arbol binario', A, Memo1);
+  memo1.Lines.Add(' ');
+end;
+
+
+//------------------------------------------------------------------------------
+//VER INFORMACION
+
+Function AlturaRama(ABuscar: PosicionArbol): LongInt;
+Var
+  Altura: Integer;
+  Procedure VerAltura(PA: PosicionArbol; AlturaR: Integer);
+  begin
+    if (not A.RamaNula(PA)) then begin
+      if (PA = ABuscar) then begin
+
+      end else begin
+        VerAltura(PA^.HI, AlturaR+1);
+        VerAltura(PA^.HD, AlturaR+1);
+      end;
+    end;
+  end;
+begin
+  Altura:= 1;
+  VerAltura(A.Root, 1);
+  Result:= Altura;
+end;
+
+Procedure BuscarDatos(ABuscar: PosicionArbol; Var A: Arbol; memo1: Tmemo);
+var
+  PA: PosicionArbol;
+  MNivel: String;
+begin
+  memo1.Lines.Add(' ');
+  memo1.Lines.Add('Datos del nodo:');
+  memo1.Lines.Add(' ');
+  //Padre
+  PA:= A.Padre(ABuscar);
+  if (PA <> NULO) then begin
+    memo1.Lines.Add('Padre: ' + VarToStr(PA^.Datos.Clave));
+  end else
+    memo1.Lines.Add('Sin padre');
+  //Hijo izquierdo
+  PA:= A.HijoIzquierdo(ABuscar);
+  if (PA <> NULO) then begin
+    memo1.Lines.Add('Hijo izquierdo: ' + VarToStr(PA^.Datos.Clave));
+  end else
+    memo1.Lines.Add('Sin hijo izquierdo');
+  //Hijo derecho
+  PA:= A.HijoDerecho(ABuscar);
+  if (PA <> NULO) then begin
+    memo1.Lines.Add('Hijo derecho: ' + VarToStr(PA^.Datos.Clave));
+  end else
+    memo1.Lines.Add('Sin hijo derecho');
+  //Hermanos
+  PA:= A.Padre(ABuscar);
+  if (PA <> NULO) then begin
+    if (A.HijoIzquierdo(PA) <> NULO) and (A.HijoIzquierdo(PA) <> ABuscar) then begin
+      PA:= A.HijoIzquierdo(PA);
+      memo1.Lines.Add('Hermano izquierdo: ' + VarToStr(PA^.Datos.Clave));
+    end else begin
+      if (A.HijoDerecho(PA) <> NULO) and (A.HijoDerecho(PA) <> ABuscar) then begin
+        PA:= A.HijoDerecho(PA);
+        memo1.Lines.Add('Hermano derecho: ' + VarToStr(PA^.Datos.Clave));
+      end else
+        memo1.Lines.Add('Sin hermanos');
+    end;
+  end else
+    memo1.Lines.Add('Sin hermanos');
+  //Nivel
+  memo1.Lines.Add('Nivel: ' + A.Nivel(ABuscar).ToString);
+  //Altura sub arbol
+  memo1.Lines.Add('Altura de la rama: ' + AlturaRama(ABuscar).ToString);
+  //Nodos mismo nivel
+  MNivel:= NodosAlMismoNivel(ABuscar);
+  if (MNivel <> '') then begin
+    memo1.lines.add('Nodos al mismo nivel: ' + MNivel);
+  end else
+    memo1.lines.add('No hay nodos al mismo nivel');
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+var
+  Nodo: TipoElemento;
+  ABuscar: PosicionArbol;
+begin
+  if (not A.EsVacio) then begin
+    Nodo.Clave:= edit1.Text;
+    if (ValidarCadena(Nodo)) then begin
+      ABuscar:= A.BuscarPreOrden(Nodo);
+      if (ABuscar <> NULO) then begin
+        memo1.Lines.Add('Elemento encontrado');
+        memo1.Lines.Add(' ');
+        BuscarDatos(ABuscar, A, memo1);
+        memo1.Lines.Add(' ');
+      end else
+        memo1.Lines.Add('No se encontró el elemento en el arbol');
+    end else
+      memo1.Lines.Add('Error, ingrese nodo permitido');
+  end else
+    memo1.Lines.Add('Arbol vacío');
+end;
+
+end.

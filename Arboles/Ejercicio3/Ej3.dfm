@@ -1,0 +1,96 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 309
+  ClientWidth = 579
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label2: TLabel
+    Left = 8
+    Top = 85
+    Width = 3
+    Height = 13
+  end
+  object Label3: TLabel
+    Left = 16
+    Top = 93
+    Width = 101
+    Height = 16
+    Caption = 'Carga manual : '
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 8
+    Top = 200
+    Width = 121
+    Height = 13
+    Caption = 'Nodo a ver informacion : '
+  end
+  object Button1: TButton
+    Left = 8
+    Top = 8
+    Width = 121
+    Height = 71
+    Caption = 'Crear Arbol'
+    TabOrder = 0
+    OnClick = Button1Click
+  end
+  object Memo1: TMemo
+    Left = 135
+    Top = 8
+    Width = 439
+    Height = 296
+    Lines.Strings = (
+      'Memo1')
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 8
+    Top = 107
+    Width = 121
+    Height = 56
+    Caption = 'Cargar arbol'
+    TabOrder = 2
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 8
+    Top = 169
+    Width = 121
+    Height = 25
+    Caption = 'Ver arbol'
+    TabOrder = 3
+    OnClick = Button3Click
+  end
+  object Button4: TButton
+    Left = 8
+    Top = 246
+    Width = 121
+    Height = 56
+    Caption = 'Ver informacion'
+    TabOrder = 4
+    OnClick = Button4Click
+  end
+  object Edit1: TEdit
+    Left = 8
+    Top = 219
+    Width = 121
+    Height = 21
+    TabOrder = 5
+  end
+end
