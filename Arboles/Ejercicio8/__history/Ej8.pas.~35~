@@ -223,6 +223,76 @@ end;
 //------------------------------------------------------------------------------
 //Nivel Hojas
 
+Function esHoja(PA: PosicionArbol): Boolean;
+begin
+  esHoja:= False;
+  if ((A.HijoIzquierdo(PA) = NULO)) then
+    esHoja:= True;
+end;
+
+Function Nivel(Nodo: String): Integer;
+var
+  X: TipoElemento;
+  PA: PosicionArbol;
+  Encontre: Boolean;
+  Nive: Integer;
+  Procedure NivelNodo(NNodo: Integer; X: TipoElemento; PA: PosicionArbol);
+  var
+    X1: TipoElemento;
+  begin
+
+    if (not A.RamaNula(PA)) and (not Encontre) then begin
+      X1:= PA.Datos;
+      if (X.Clave = X1.Clave) then begin
+        Nive:= NNodo;
+        Encontre:= True;
+      end;
+      NivelNodo((NNodo + 1), X, A.HijoIzquierdo(PA));
+      NivelNodo(NNodo , X, A.HijoDerecho(PA));
+    end;
+
+  end;
+begin
+  Encontre:= False;
+  X.Clave:= Nodo;
+  PA:= A.Root;
+  NivelNodo(0, X, PA);
+  if (not Encontre) then
+    Nivel:= -1
+  else
+    Nivel:= Nive;
+end;
+
+Function esNivel(Niv: Integer): Boolean;
+  Procedure CH(PA: PosicionArbol; Var N: Integer);
+  var
+    X, Y: TipoElemento;
+  begin
+
+    if (not A.RamaNula(PA)) then begin
+      if (esHoja(PA)) then begin
+        X:= A.Recuperar(PA);
+        if ((Nivel (VArTostr(X.Clave))) <> N) then
+          N:= -1;
+      end;
+      CH (A.HijoIzquierdo(PA), N);
+      CH (A.HijoDerecho(PA),N);
+    end;
+
+  end;
+var
+  i: Integer;
+begin
+
+  i:= Niv;
+  CH(A.Root, i);
+  if (i = -1) then
+    esNivel:= False
+  else
+    esNivel:= True;
+
+end;
+
 Function NivelHojas(): Boolean;
 var
   Flag: Boolean;
@@ -231,7 +301,16 @@ var
     Niv: Integer;
     X: TipoElemento;
   begin
-
+    if (not A.RamaNula(PA) and (Flag)) then begin
+      if (esHoja(PA)) then begin
+        X:= A.Recuperar(PA);
+        Niv:= Nivel(VarToStr(X.Clave));
+        if (not esNivel(Niv)) then
+          Flag:= False;
+      end;
+      NH(A.HijoIzquierdo(PA), Flag);
+      NH(A.HijoDerecho(PA), Flag);
+    end;
   end;
 begin
   Flag:= True;

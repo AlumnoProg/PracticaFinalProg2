@@ -28,6 +28,7 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -325,6 +326,27 @@ begin
       memo1.Lines.Add('Las hojas están al mismo nivel')
     else
       memo1.Lines.Add('Las hojas no están la mismo nivel');
+  end else
+    memo1.Lines.Add('Arbol vacío');
+end;
+
+
+//------------------------------------------------------------------------------
+//NIVEL NODO
+
+procedure TForm1.Button6Click(Sender: TObject);
+var
+  X: TipoElemento;
+begin
+  if (not A.EsVacio) then begin
+    X.Clave:= edit1.Text;
+    if (ValidarCadena(X)) then begin
+      if (Nivel(edit1.Text) = -1) then begin
+        memo1.Lines.Add('No se encontro el nodo');
+      end else
+        memo1.Lines.Add('El nivel del nodo ' + edit1.Text + ' es: ' + Nivel(edit1.Text).ToString);
+    end else
+      memo1.Lines.Add('Error, ingrese un nodo válido');
   end else
     memo1.Lines.Add('Arbol vacío');
 end;
