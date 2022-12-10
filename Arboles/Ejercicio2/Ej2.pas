@@ -30,6 +30,9 @@ type
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -311,6 +314,161 @@ begin
     CI.Crear(A.DatoDeLaClave, A.SizeTree);
     memo1.Lines.Add(' ');
     if (NivelHojasIguales(CI)) then begin
+      memo1.Lines.Add(' ');
+      MostrarCola('Hojas al mismo nivel', CI, memo1);
+    end else
+      memo1.Lines.Add('Las hojas estan en diferentes niveles');
+  end else
+    memo1.Lines.Add('Arbol vacío');
+end;
+
+
+//------------------------------------------------------------------------------
+//Hojas iterativas
+
+Function esHojaIT(Dato: TipoElemento): Boolean;
+begin
+  esHojaIT:= False;
+  if (A.HijoIzquierdo(Dato.Valor2) = NULO) and (A.HijoDerecho(Dato.Valor2) = NULO) then
+    esHojaIT:= True;
+end;
+
+Function BuscarNodosTerminalesIterativo(Var A: Arbol): Cola;
+var
+  C, CR: Cola;
+  X: TipoElemento;
+  PA: PosicionArbol;
+begin
+  C.Crear(A.DatoDeLaClave, A.SizeTree);
+  CR.Crear(A.DatoDeLaClave, A.SizeTree);
+  PA:= A.Root;
+  while (PA <> NULO) or (not C.EsVacia) do begin
+    while (PA <> NULO) do begin
+      X:= A.Recuperar(PA);
+      X.Valor2:= PA;
+      C.Encolar(X);
+      PA:= A.HijoIzquierdo(X.valor2);
+    end;
+    if (PA = NULO) and (not C.EsVacia) then begin
+      X:= C.Recuperar;
+      if (esHojaIT(X)) then
+        CR.Encolar(X);
+      C.DesEncolar;
+      PA:= A.HijoDerecho(X.Valor2);
+    end;
+  end;
+  Result:= CR;
+end;
+
+procedure TForm1.Button8Click(Sender: TObject);
+var
+  NodosT: Cola;
+begin
+  if (not A.EsVacio) then begin
+    NodosT:= BuscarNodosTerminalesIterativo(A);
+    memo1.Lines.Add(' ');
+    if (not NodosT.EsVacia) then begin
+      MostrarCola('Nodos Terminales:', NodosT, memo1);
+      memo1.Lines.Add(' ');
+    end else
+      memo1.Lines.Add('No hay nodos terminales/hojas');
+  end else
+    memo1.Lines.Add('Arbol vacío');
+end;
+
+
+//------------------------------------------------------------------------------
+//Nodos interiores
+
+Function BuscarNodosInterioresIterativo(var A: Arbol): Cola;
+var
+  C, CR: Cola;
+  X: TipoElemento;
+  PA: PosicionArbol;
+begin
+  C.Crear(A.DatoDeLaClave, A.SizeTree);
+  CR.Crear(A.DatoDeLaClave, A.SizeTree);
+  PA:= A.Root;
+  while (PA <> NULO) or (not C.EsVacia) do begin
+    while (PA <> NULO) do begin
+      X:= A.Recuperar(PA);
+      X.Valor2:= PA;
+      C.Encolar(X);
+      PA:= A.HijoIzquierdo(X.Valor2);
+    end;
+    if (PA = NULO) and (not C.EsVacia) then begin
+      X:= C.Recuperar;
+      if (not esHojaIT(X)) and (X.Valor2 <> A.Root) then
+        CR.Encolar(X);
+      C.DesEncolar;
+      PA:= A.HijoDerecho(X.Valor2);
+    end;
+  end;
+  Result:= CR;
+end;
+
+procedure TForm1.Button9Click(Sender: TObject);
+var
+  NodosI: Cola;
+begin
+  if (not A.EsVacio) then begin
+    NodosI:= BuscarNodosInterioresIterativo(A);
+    memo1.Lines.Add(' ');
+    if (not NodosI.EsVacia) then begin
+      MostrarCola('Nodos interiores', NodosI, Memo1);
+      memo1.Lines.Add(' ');
+    end else
+      memo1.Lines.Add('No hay nodos interiores');
+  end else
+    memo1.Lines.Add('Arbol vacío');
+end;
+
+
+//------------------------------------------------------------------------------
+//Hojas mismo nivel
+
+Function NivelHojasIgualesIT(var C: Cola): Boolean;
+var
+  Nivel: Integer;
+  X: TipoElemento;
+  Iguales: Boolean;
+  PA: PosicionArbol;
+  CAux: Cola;
+begin
+  Nivel:= A.Altura - 1;
+  PA:= A.Root;
+  Iguales:= True;
+  CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+  while (PA <> NULO) or (not CAux.EsVacia) do begin
+    while (PA <> NULO) do begin
+      X:= A.Recuperar(PA);
+      X.Valor2:= PA;
+      CAux.Encolar(X);
+      PA:= A.HijoIzquierdo(X.Valor2);
+    end;
+    if (PA = NULO) and (not CAux.EsVacia) then begin
+      X:= CAux.Recuperar;
+      if (esHojaIT(X)) then begin
+        if (Nivel <> a.Nivel(X.Valor2)) then
+          Iguales:= False
+        else
+          C.Encolar(X);
+      end;
+      CAux.DesEncolar;
+      PA:= A.HijoDerecho(X.Valor2);
+    end;
+  end;
+  Result:= Iguales;
+end;
+
+procedure TForm1.Button10Click(Sender: TObject);
+var
+  CI: Cola;
+begin
+  if (not A.EsVacio) then begin
+    CI.Crear(A.DatoDeLaClave, A.SizeTree);
+    memo1.Lines.Add(' ');
+    if (NivelHojasIgualesIT(CI)) then begin
       memo1.Lines.Add(' ');
       MostrarCola('Hojas al mismo nivel', CI, memo1);
     end else

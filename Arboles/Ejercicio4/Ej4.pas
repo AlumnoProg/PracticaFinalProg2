@@ -31,6 +31,8 @@ type
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -312,6 +314,109 @@ begin
         memo1.Lines.Add('No son similares');
     end;
   end;
+end;
+
+
+//------------------------------------------------------------------------------
+//Anchura iterativa
+
+Function RecorridoEnAnchuraIT(): String;
+var
+  C: Cola;
+  S: String;
+  PA: PosicionArbol;
+  X: TipoElemento;
+begin
+  S:= '';
+  if (not AB.EsVacio) then begin
+    C.Crear(AB.DatoDeLaClave, AB.SizeTree);
+    X:= AB.Recuperar(AB.Root);
+    X.Valor2:= AB.Root;
+    C.Encolar(X);
+    while (not C.EsVacia) do begin
+      X:= C.Recuperar;
+      C.DesEncolar;
+      PA:= X.Valor2;
+      while (not AB.RamaNula(PA)) do begin
+        S:= S + VarToStr(PA^.Datos.Clave);
+        if (AB.HijoIzquierdo(PA) <> NULO) then begin
+          X:= AB.Recuperar(PA^.HI);
+          X.Valor2:= PA^.HI;
+          C.Encolar(X);
+        end;
+        PA:= PA^.HD;
+      end;
+    end;
+  end;
+  Result:= S;
+end;
+
+procedure TForm1.Button9Click(Sender: TObject);
+begin
+  if (not AB.EsVacio) then begin
+    memo1.Lines.Add('Recorrido en anchura de izquierda a derecha');
+    Memo1.Lines.Add(RecorridoEnAnchuraIT);
+  end else
+    memo1.Lines.Add('Arbol vacío');
+end;
+
+
+//------------------------------------------------------------------------------
+//Numero de hojas iterativo
+
+Function esHojaIT(X: TipoElemento): Boolean;
+begin
+  esHojaIT:= False;
+  if (AB.HijoIzquierdo(X.Valor2) = NULO) then
+    esHojaIT:= True;
+end;
+
+Function CantHojasIT(Var Listado: String): Integer;
+var
+  CHojas: Integer;
+  X: TipoElemento;
+  PA: PosicionArbol;
+  C: Cola;
+begin
+  CHojas:= 0;
+  Listado:= '';
+  PA:= AB.Root;
+  C.Crear(AB.DatoDeLaClave, AB.SizeTree);
+  while (PA <> NULO) or (not C.EsVacia) do begin
+    while (PA <> NULO) do begin
+      X:= AB.Recuperar(PA);
+      X.Valor2:= PA;
+      C.Encolar(X);
+      PA:= AB.HijoIzquierdo(X.Valor2);
+    end;
+    if (PA = NULO) and (not C.EsVacia) then begin
+      X:= C.Recuperar;
+      if (esHojaIT(X)) then begin
+        Inc(CHojas);
+        Listado:= Listado + ', ' + VarToStr(X.Clave);
+      end;
+      C.DesEncolar;
+      PA:= AB.HijoDerecho(X.Valor2);
+    end;
+  end;
+  Result:= CHojas;
+end;
+
+procedure TForm1.Button10Click(Sender: TObject);
+Var
+  CHojas: Integer;
+  Listado: String;
+begin
+  if (not AB.EsVacio) then begin
+    CHojas:= CantHojasIT(Listado);
+    if (CHojas > 0) then begin
+      memo1.Lines.Add('Cantidad de hojas: ' + CHojas.ToString);
+      memo1.Lines.Add(' ');
+      memo1.Lines.Add(Listado);
+    end else
+      memo1.Lines.Add('La cantidad de hojas es 0');
+  end else
+    memo1.Lines.Add('Arbol vacío');
 end;
 
 end.

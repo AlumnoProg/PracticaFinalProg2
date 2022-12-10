@@ -110,6 +110,7 @@ object Form1: TForm1
     Caption = 'Hojas Itera'
     TabOrder = 8
     WordWrap = True
+    OnClick = Button8Click
   end
   object Button9: TButton
     Left = 79
@@ -119,6 +120,7 @@ object Form1: TForm1
     Caption = 'Nodos Interiores IT'
     TabOrder = 9
     WordWrap = True
+    OnClick = Button9Click
   end
   object Button10: TButton
     Left = 79
@@ -128,5 +130,6 @@ object Form1: TForm1
     Caption = 'Hojas al mismo Nivel IT'
     TabOrder = 10
     WordWrap = True
+    OnClick = Button10Click
   end
 end

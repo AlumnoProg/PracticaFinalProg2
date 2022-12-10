@@ -118,6 +118,7 @@ object Form1: TForm1
     Caption = 'Anchura Iterativa'
     TabOrder = 9
     WordWrap = True
+    OnClick = Button9Click
   end
   object Button10: TButton
     Left = 79
@@ -127,5 +128,6 @@ object Form1: TForm1
     Caption = 'Nro Hojas IT'
     TabOrder = 10
     WordWrap = True
+    OnClick = Button10Click
   end
 end
