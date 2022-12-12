@@ -1,0 +1,63 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{B835DCB0-5223-40AB-83FF-64E35DDAEBB8}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Ejercicio3.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\Arboles\Ejercicio3\Ejercicio3.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\Arboles\Ejercicio4\Ejercicio4.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\Ejercicios Arboles y Colas Finales\Ej.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Ejercicio3">
+        <MSBuild Projects="..\..\Arboles\Ejercicio3\Ejercicio3.dproj"/>
+    </Target>
+    <Target Name="Ejercicio3:Clean">
+        <MSBuild Projects="..\..\Arboles\Ejercicio3\Ejercicio3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Ejercicio3:Make">
+        <MSBuild Projects="..\..\Arboles\Ejercicio3\Ejercicio3.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Ejercicio4">
+        <MSBuild Projects="..\..\Arboles\Ejercicio4\Ejercicio4.dproj"/>
+    </Target>
+    <Target Name="Ejercicio4:Clean">
+        <MSBuild Projects="..\..\Arboles\Ejercicio4\Ejercicio4.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Ejercicio4:Make">
+        <MSBuild Projects="..\..\Arboles\Ejercicio4\Ejercicio4.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Ej">
+        <MSBuild Projects="..\..\Ejercicios Arboles y Colas Finales\Ej.dproj"/>
+    </Target>
+    <Target Name="Ej:Clean">
+        <MSBuild Projects="..\..\Ejercicios Arboles y Colas Finales\Ej.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Ej:Make">
+        <MSBuild Projects="..\..\Ejercicios Arboles y Colas Finales\Ej.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Ejercicio3;Ejercicio3;Ejercicio4;Ej"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Ejercicio3:Clean;Ejercicio3:Clean;Ejercicio4:Clean;Ej:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Ejercicio3:Make;Ejercicio3:Make;Ejercicio4:Make;Ej:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
