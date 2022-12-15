@@ -1,0 +1,154 @@
+unit Ejer;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, ConjuntosAVL, Vcl.StdCtrls;
+
+Const MaxConjunto = 2000;
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+    Edit1: TEdit;
+    Button2: TButton;
+    Edit2: TEdit;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    Button6: TButton;
+    Edit3: TEdit;
+    Edit4: TEdit;
+    Memo1: TMemo;
+    Button7: TButton;
+    Button8: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  C: Conjunto;
+  Largo: Integer;
+
+  implementation
+
+{$R *.dfm}
+
+//------------------------------------------------------------------------------
+//Crear conjunto
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+      Largo:= StrToint (Edit1.Text);
+      C.Crear(Numero,Largo);
+      Memo1.Clear;
+      Memo1.Lines.Add('- CONJUNTOS SETEADOS CON EXITO. -');
+      Memo1.Lines.Add(' ');
+end;
+
+
+//------------------------------------------------------------------------------
+//Cargar conjunto
+
+procedure TForm1.Button2Click(Sender: TObject);
+var
+  X: TipoElemento;
+begin
+    if C.EsLLeno then
+     Memo1.Lines.Add('- CONJUNTO 1 LLENO. -')
+      else
+      begin
+        X.Clave:= StrToInt(edit2.Text);
+        If C.Agregar(X) <> ClaveDuplicada Then
+          Memo1.Lines.Add('- DATO : " '+ edit2.Text +' " CARGADO CON EXITO EN EL CONJUNTO 1. -')
+        else
+          Memo1.Lines.Add('-EL DATO : " '+ edit2.Text +' " YA FUE INGRESADO EN EL CONJUNTO 1. -');
+      end;
+  edit2.Clear;
+end;
+
+
+//------------------------------------------------------------------------------
+//Ver conjunto
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+  memo1.Lines.Add(C.RetornarClaves);
+end;
+
+
+//------------------------------------------------------------------------------
+//limpiar pantalla
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  memo1.Clear;
+end;
+
+//------------------------------------------------------------------------------
+//Buscar si un elemento existe en el conjunto
+
+procedure TForm1.Button5Click(Sender: TObject);
+var
+  X: TipoElemento;
+begin
+  X.Clave:= edit3.Text;
+  {if (C.BuscarElemento(X)) then
+    memo1.Lines.Add('El elemento existe')
+  else
+    memo1.Lines.Add('El elemento no existe'); }
+end;
+
+
+//------------------------------------------------------------------------------
+//Buscar si un elemento existe en el conjunto avl
+
+procedure TForm1.Button6Click(Sender: TObject);
+var
+  X: TipoElemento;
+begin
+ { X.Clave:= edit4.Text;
+  if (C.BuscarElementos(X)) then
+    memo1.Lines.Add('El elemento existe')
+  else
+    memo1.Lines.Add('El elemento no existe');  }
+end;
+
+
+//------------------------------------------------------------------------------
+//Sumar contenido tad conjunto
+
+procedure TForm1.Button7Click(Sender: TObject);
+begin
+
+ { if (not C.EsVacio) then begin
+    memo1.Lines.Add('Suma: ' + IntToStr(C.SumarContenido));
+  end else
+    memo1.Lines.Add('Conjunto vacio');}
+end;
+
+
+//------------------------------------------------------------------------------
+//Sumar contenido tad conjunto avl
+
+procedure TForm1.Button8Click(Sender: TObject);
+begin
+  if (not C.EsVacio) then begin
+    memo1.Lines.Add('Suma: ' + IntToStr(C.SumarContenido));
+  end else
+    memo1.Lines.Add('Conjunto vacio');
+end;
+
+end.

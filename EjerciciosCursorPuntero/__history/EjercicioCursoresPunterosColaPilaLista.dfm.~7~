@@ -1,0 +1,100 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 288
+  ClientWidth = 515
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Button1: TButton
+    Left = 8
+    Top = 8
+    Width = 75
+    Height = 25
+    Caption = 'Definir Cola'
+    TabOrder = 0
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 89
+    Top = 8
+    Width = 75
+    Height = 25
+    Caption = 'Definir Lista'
+    TabOrder = 1
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 8
+    Top = 39
+    Width = 156
+    Height = 25
+    Caption = 'Definir Pila'
+    TabOrder = 2
+    OnClick = Button3Click
+  end
+  object Edit1: TEdit
+    Left = 8
+    Top = 70
+    Width = 156
+    Height = 21
+    TabOrder = 3
+  end
+  object Button4: TButton
+    Left = 8
+    Top = 186
+    Width = 156
+    Height = 25
+    Caption = 'Mostrar todo'
+    TabOrder = 4
+    OnClick = Button4Click
+  end
+  object Button5: TButton
+    Left = 8
+    Top = 97
+    Width = 75
+    Height = 25
+    Caption = 'Cargar Cola'
+    TabOrder = 5
+  end
+  object Button6: TButton
+    Left = 89
+    Top = 97
+    Width = 75
+    Height = 25
+    Caption = 'Cargar Lista'
+    TabOrder = 6
+  end
+  object Button7: TButton
+    Left = 8
+    Top = 128
+    Width = 156
+    Height = 25
+    Caption = 'Cargar Pila'
+    TabOrder = 7
+  end
+  object Edit2: TEdit
+    Left = 8
+    Top = 159
+    Width = 156
+    Height = 21
+    TabOrder = 8
+  end
+  object Memo1: TMemo
+    Left = 170
+    Top = 8
+    Width = 271
+    Height = 203
+    Lines.Strings = (
+      'Memo1')
+    ScrollBars = ssVertical
+    TabOrder = 9
+  end
+end

@@ -1,0 +1,405 @@
+unit EjercicioCursoresPunterosColaPilaLista;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, ListCursor, StackCursor, QueuesCursor,
+  Vcl.StdCtrls;
+
+Const MaxCadena = 255;
+      MaxCola = 2000;
+      MaxPila = 2000;
+      MaxEntero = 9999999;
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    Edit1: TEdit;
+    Button4: TButton;
+    Button5: TButton;
+    Button6: TButton;
+    Button7: TButton;
+    Edit2: TEdit;
+    Memo1: TMemo;
+    Button8: TButton;
+    Button9: TButton;
+    Edit3: TEdit;
+    Button10: TButton;
+    Edit4: TEdit;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  C: Cola;
+  L: Lista;
+  P: Pila;
+  QAux: Integer;
+  Tamanio: String;
+  Tamanio2: Integer;
+
+implementation
+
+{$R *.dfm}
+
+
+//------------------------------------------------------------------------------
+//Definir cola
+
+Function ValidarLongitud(AValidar: String; Var Validado: Integer): Boolean;
+Begin
+  ValidarLongitud:= False;
+  if(TryStrToInt(AValidar, Validado))and(1<=Validado)and(Validado<=MaxCola)then
+    ValidarLongitud:= True;
+End;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  Longitud: Integer;
+begin
+  if(ValidarLongitud(Edit1.Text, Longitud))then begin
+    if(C.MaxSizeQueue=MaxCola)then begin
+      C.Crear(Cadena, Longitud);
+      QAux:= 0;
+    end else begin
+      C.Crear(Cadena, Longitud+1);
+      QAux:= 0;
+    end;
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -COLAS DEFINIDAS- ');
+  end else begin
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -INGRESE VALORES PERMITIDOS- ');
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' Ingrese valor entero entre 1 y '+MaxCola.ToString+'. ');
+  end;
+end;
+
+
+//------------------------------------------------------------------------------
+//Definir lista
+
+Function ValidarTamanioLista(Edit: String): Boolean;
+var
+  i: integer;
+begin
+  if (not(TryStrToInt(Edit, i))) or (i < 1) or (i > 2000) then
+    ValidarTamanioLista:= False
+  else
+    ValidarTamanioLista:= True;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+  Tamanio:= edit1.Text;
+  if ValidarTamanioLista(Tamanio) then begin
+    L.Crear(Numero, StrToInt(Tamanio));
+    memo1.Lines.Add('Lista creada con éxito');
+  end else
+    memo1.Lines.Add('Error, ingrese un numero entero entre 1 y 2000');
+end;
+
+
+//------------------------------------------------------------------------------
+//Definir pila
+
+Function ValidarTamanioPila(Edit: String; Var Validado: Integer): Boolean;
+begin
+
+  ValidarTamanioPila:= False;
+  if (TryStrToInt(Edit, Validado)) and (Validado >= 1) and (Validado <= 2000) then
+    ValidarTamanioPila:= True;
+
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+  if (ValidarTamanioPila(edit1.Text, Tamanio2)) then begin
+    P.Crear(Numero, Tamanio2);
+    memo1.Lines.Add('Pila creada con éxito');
+  end else
+    memo1.lines.Add('Error, ingrese valores permitidos');
+end;
+
+
+//------------------------------------------------------------------------------
+//Mostrar
+
+Procedure MostrarCola(Cartel: String; Var C: Cola; Memo1: TMemo);
+Var TeC: TipoElemento;
+    CAux: Cola;
+    Posicion: Integer;
+
+Begin
+
+  Posicion:= 1;
+
+  Memo1.Lines.Add(' ');
+  Memo1.Lines.Add(' || '+Cartel+' ||');
+  if(Not C.EsVacia)then begin
+
+    CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+
+    Memo1.Lines.Add(' ');
+    while(Not C.EsVacia)do begin
+
+      TeC:= C.Recuperar;
+      Memo1.Lines.Add(' Posicion : '+Posicion.ToString+' | Elemento : '+VarToStr(TeC.Clave));
+      CAux.Encolar(TeC);
+      C.DesEncolar;
+      Inc(Posicion);
+
+    end;
+
+    C.InterCambiar(CAux, False);
+
+  end else begin
+
+    Memo1.Lines.Add(' ');
+    Memo1.Lines.Add(' -COLA VACIA-');
+
+  end;
+
+End;
+
+Procedure Mostrar(Memo: Tmemo; LAux: Lista);
+var
+  X: TipoElemento;
+  Q: PosicionLista;
+begin
+
+  Memo.Lines.Add('-------------------------');
+  Memo.Lines.Add('Lista: ');
+  Q:= LAux.Comienzo;
+  while Q <> NULO do begin
+    X:= LAux.Recuperar(Q);
+    Memo.Lines.Add(VarToStr(X.Clave));
+    Q:= LAux.Siguiente(Q);
+  end;
+  Memo.Lines.Add('-------------------------');
+
+end;
+
+Procedure MostrarPila(Cartel: String; Var P: Pila; Memo1: TMemo);
+Begin
+
+  Memo1.Lines.Add(' ');
+  Memo1.Lines.Add(' || '+Cartel+' ||');
+  if(Not P.EsVacia)then
+    Memo1.Lines.Add(P.RetornarClaves)
+  else begin
+
+      Memo1.Lines.Add(' ');
+      Memo1.Lines.Add(' -PILA VACIA- ');
+
+  end;
+
+End;
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  memo1.Lines.Add(' ');
+  MostrarCola('Cola: ',C, memo1);
+  memo1.Lines.Add(' ');
+  Mostrar(memo1, L);
+  memo1.Lines.Add(' ');
+  MostrarPila('Pila: ', P, memo1);
+  memo1.Lines.Add(' ');
+end;
+
+
+//------------------------------------------------------------------------------
+//Cargar cola
+
+Function SinEspacios(S: String): Boolean;
+Var Posicion: Integer;
+
+Begin
+
+  Posicion:= 1;
+  SinEspacios:= False;
+  while(Posicion<=Length(S))and(S[Posicion]<>' ')do
+    Inc(Posicion);
+  if(Posicion>Length(S))then SinEspacios:= True;
+
+End;
+
+Function ValidarEdit(Edit: String): Boolean;
+begin
+
+  ValidarEdit:= False;
+  if(Edit<>'')and(SinEspacios(Edit)) and (1<=Length(Edit))and(Length(Edit)<=MaxCadena)then
+    ValidarEdit:= True;
+
+end;
+
+Function CargarCola(Edit: String; Var C: Cola): Boolean;
+var
+  X: TipoElemento;
+begin
+
+  CargarCola:= False;
+  if (ValidarEdit(Edit)) then begin
+    X.Clave:= Edit;
+    if (C.Encolar(X) = OK) then
+      CargarCola:= True;
+  end;
+
+
+end;
+
+procedure TForm1.Button5Click(Sender: TObject);
+begin
+  if (not C.EsLlena) then begin
+    if (CargarCola(edit2.Text, C)) then begin
+      Inc(QAux);
+      memo1.Lines.Add(edit2.Text + ' cargado en la cola');
+    end else
+      memo1.Lines.Add('Error, ingrese los datos correctamente');
+  end else
+    memo1.Lines.Add('Cola llena');
+end;
+
+
+//------------------------------------------------------------------------------
+//Cargar lista
+
+Function ValidarEdit2(Edit: String):Boolean;
+var
+  i: integer;
+begin
+
+  if (not(TryStrToInt(Edit, i))) then
+    ValidarEdit2:= False
+  else
+    ValidarEdit2:= True;
+
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+var
+  X: TipoElemento;
+  Numero: String;
+begin
+  Numero:= edit2.Text;
+  if (L.EsLLena = False) then begin
+    if (ValidarEdit2(Numero)) then begin
+      X.Clave:= StrToInt(Numero);
+      L.Agregar(X);
+      memo1.Lines.Add(Numero + ' cargado con éxito en la lista');
+      edit2.Clear;
+    end else
+      memo1.Lines.Add('Error, ingrese un numero entero');
+  end else
+    memo1.Lines.Add('Lista llena');
+end;
+
+
+//------------------------------------------------------------------------------
+//Cargar pila
+
+Function SinEspacios2(S: String): Boolean;
+Var Posicion: Integer;
+
+Begin
+
+  Posicion:= 1;
+  SinEspacios2:= False;
+
+  while(Posicion<=Length(S))and(S[Posicion]<>' ')do
+    Inc(Posicion);
+
+  if(Posicion>Length(S))then SinEspacios2:= True;
+
+End;
+
+Function ValidarEdit3(Edit: String): Boolean;
+begin
+
+  ValidarEdit3:= False;
+  if (Edit <> '') and (SinEspacios2(Edit)) and (Length(Edit) >= 1) and (Length(Edit) <= 2000) then
+    ValidarEdit3:= True;
+
+end;
+
+Function CargarElemento(Elemento: String; Var P: Pila): Boolean;
+var
+  X: TipoElemento;
+begin
+
+  CargarElemento:= False;
+  if (ValidarEdit3(Elemento)) then begin
+    X.Clave:= Elemento;
+    P.Apilar(X);
+    CargarElemento:= True;
+  end;
+
+end;
+
+procedure TForm1.Button7Click(Sender: TObject);
+begin
+  if (not P.EsLlena) then begin
+    if (CargarElemento(edit2.Text, P)) then begin
+      memo1.Lines.Add(edit2.Text + ' apilado con éxito');
+    end else
+      memo1.Lines.Add('Error, ingrese los datos correctamente');
+  end else
+    memo1.Lines.Add('Pila llena');
+end;
+
+
+//------------------------------------------------------------------------------
+//Limpiar pantalla
+
+procedure TForm1.Button8Click(Sender: TObject);
+begin
+  memo1.Clear;
+end;
+
+
+//------------------------------------------------------------------------------
+//Eliminar ocurrencia de una lista
+
+procedure TForm1.Button9Click(Sender: TObject);
+var
+  X: TipoElemento;
+begin
+  if (not L.EsVacia) then begin
+    X.Clave:= edit3.Text;
+    memo1.Lines.Add('Elemento eliminado, cantidad de ocurrencias: ' + L.EliminarOcurrencias(X).ToString);
+  end else
+    memo1.Lines.Add('Lista vacia');
+end;
+
+
+//------------------------------------------------------------------------------
+//Eliminar ocurrencia de una cola
+
+procedure TForm1.Button10Click(Sender: TObject);
+var
+  X: TipoElemento;
+begin
+  if (not L.EsVacia) then begin
+    X.Clave:= edit3.Text;
+    memo1.Lines.Add('Elemento eliminado, cantidad de ocurrencias: ' + C.EliminarOcurrencias(X).ToString);
+  end else
+    memo1.Lines.Add('Lista vacia');
+end;
+
+end.

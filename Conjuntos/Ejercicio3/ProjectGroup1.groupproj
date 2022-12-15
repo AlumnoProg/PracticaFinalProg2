@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{FE3FACEF-5324-4F96-8DB6-D9509B0D9333}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Ejercicio3.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\VerTADConjuntos\Ejercicio.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Ejercicio3">
+        <MSBuild Projects="Ejercicio3.dproj"/>
+    </Target>
+    <Target Name="Ejercicio3:Clean">
+        <MSBuild Projects="Ejercicio3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Ejercicio3:Make">
+        <MSBuild Projects="Ejercicio3.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Ejercicio">
+        <MSBuild Projects="..\..\VerTADConjuntos\Ejercicio.dproj"/>
+    </Target>
+    <Target Name="Ejercicio:Clean">
+        <MSBuild Projects="..\..\VerTADConjuntos\Ejercicio.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Ejercicio:Make">
+        <MSBuild Projects="..\..\VerTADConjuntos\Ejercicio.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Ejercicio3;Ejercicio"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Ejercicio3:Clean;Ejercicio:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Ejercicio3:Make;Ejercicio:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

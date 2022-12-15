@@ -1,0 +1,78 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{997EBEB1-E840-42E3-A55C-9E3ECB268940}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Ejercicio2.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\Listas\Ejercicio2\Ejercicio2.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\Pilas\Ejercicio2\Ejercicio2.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\EjerciciosCursorPuntero\Ej.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\Pilas\Ejercicio5\Ejercicio5.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\Listas\Ejercicio3\Ejercicio3.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Ejercicio2">
+        <MSBuild Projects="..\..\Pilas\Ejercicio2\Ejercicio2.dproj"/>
+    </Target>
+    <Target Name="Ejercicio2:Clean">
+        <MSBuild Projects="..\..\Pilas\Ejercicio2\Ejercicio2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Ejercicio2:Make">
+        <MSBuild Projects="..\..\Pilas\Ejercicio2\Ejercicio2.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Ej">
+        <MSBuild Projects="..\..\EjerciciosCursorPuntero\Ej.dproj"/>
+    </Target>
+    <Target Name="Ej:Clean">
+        <MSBuild Projects="..\..\EjerciciosCursorPuntero\Ej.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Ej:Make">
+        <MSBuild Projects="..\..\EjerciciosCursorPuntero\Ej.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Ejercicio5">
+        <MSBuild Projects="..\..\Pilas\Ejercicio5\Ejercicio5.dproj"/>
+    </Target>
+    <Target Name="Ejercicio5:Clean">
+        <MSBuild Projects="..\..\Pilas\Ejercicio5\Ejercicio5.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Ejercicio5:Make">
+        <MSBuild Projects="..\..\Pilas\Ejercicio5\Ejercicio5.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Ejercicio3">
+        <MSBuild Projects="..\..\Listas\Ejercicio3\Ejercicio3.dproj"/>
+    </Target>
+    <Target Name="Ejercicio3:Clean">
+        <MSBuild Projects="..\..\Listas\Ejercicio3\Ejercicio3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Ejercicio3:Make">
+        <MSBuild Projects="..\..\Listas\Ejercicio3\Ejercicio3.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Ejercicio2;Ejercicio2;Ejercicio2;Ej;Ejercicio5;Ejercicio3"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Ejercicio2:Clean;Ejercicio2:Clean;Ejercicio2:Clean;Ej:Clean;Ejercicio5:Clean;Ejercicio3:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Ejercicio2:Make;Ejercicio2:Make;Ejercicio2:Make;Ej:Make;Ejercicio5:Make;Ejercicio3:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
