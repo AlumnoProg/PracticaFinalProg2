@@ -271,13 +271,15 @@ var
   Q: PosicionCola;
   CAux: Cola;
   Ocurrencias: LongInt;
+  X2: TipoElemento;
 begin
   Q:= Inicio;
   Ocurrencias:= 0;
   CAux.Crear(TDatoDeLaClave, Size);
   while (not esVacia()) do begin
-    if (Cursor[Q].Datos.Clave <> X.Clave) then begin
-      CAux.Encolar(Cursor[Q].Datos);
+    X2:= Recuperar();
+    if (X2.Clave <> X.Clave) then begin
+      CAux.Encolar(X2);
     end else begin
       Inc(Ocurrencias);
     end;

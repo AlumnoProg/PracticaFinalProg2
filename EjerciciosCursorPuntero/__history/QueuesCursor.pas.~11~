@@ -266,11 +266,25 @@ Begin
   MaxSizeQueue := MAX;
 End;
 
-Function Lista.EliminarOcurrencias(X: TipoElemento): LongInt;
+Function Cola.EliminarOcurrencias(X: TipoElemento): LongInt;
 var
   Q: PosicionCola;
+  CAux: Cola;
+  Ocurrencias: LongInt;
 begin
-
+  Q:= Inicio;
+  Ocurrencias:= 0;
+  CAux.Crear(TDatoDeLaClave, Size);
+  while (not esVacia()) do begin
+    if (Cursor[Q].Datos.Clave <> X.Clave) then begin
+      CAux.Encolar(Cursor[Q].Datos);
+    end else begin
+      Inc(Ocurrencias);
+    end;
+    Desencolar();
+  end;
+  Intercambiar(CAux, False);
+  Result:= Ocurrencias;
 end;
 
 End.

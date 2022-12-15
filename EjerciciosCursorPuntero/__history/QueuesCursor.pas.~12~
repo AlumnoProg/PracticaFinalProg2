@@ -41,6 +41,7 @@ Type
     Function DatoDeLaClave: TipoDatosClave;
     Function SizeQueue(): LongInt;
     Function MaxSizeQueue(): LongInt;
+    Function EliminarOcurrencias(X: TipoElemento): LongInt;
    End;
 
 Implementation
@@ -264,5 +265,28 @@ Function Cola.MaxSizeQueue(): LongInt;
 Begin
   MaxSizeQueue := MAX;
 End;
+
+Function Cola.EliminarOcurrencias(X: TipoElemento): LongInt;
+var
+  Q: PosicionCola;
+  CAux: Cola;
+  Ocurrencias: LongInt;
+  X2: TipoElemento;
+begin
+  Q:= Inicio;
+  Ocurrencias:= 0;
+  CAux.Crear(TDatoDeLaClave, Size);
+  while (not esVacia()) do begin
+    X2:= Recuperar();
+    if (X2.Clave <> X.Clave) then begin
+      CAux.Encolar(Cursor[Q].Datos);
+    end else begin
+      Inc(Ocurrencias);
+    end;
+    Desencolar();
+  end;
+  Intercambiar(CAux, False);
+  Result:= Ocurrencias;
+end;
 
 End.
