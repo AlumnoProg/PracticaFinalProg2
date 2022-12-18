@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, ArbolesBinarios, QueuesPointer,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Tipos, ArbolesBinarios, QueuesPointer, ListCursor,
   Vcl.StdCtrls;
 
 Const MaxCadena = 255;
@@ -26,6 +26,9 @@ type
     Button7: TButton;
     Button8: TButton;
     Button9: TButton;
+    Button10: TButton;
+    Button11: TButton;
+    Edit3: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
@@ -34,6 +37,8 @@ type
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -348,7 +353,7 @@ var
     PAAux: PosicionArbol;
     X: TipoElemento;
   begin
-    if (not A.RamaNula(PA)) then begin
+   { if (not A.RamaNula(PA)) then begin
       BuscarNodos(PA^.HI, Nodos);
       if (A.HijoIzquierdo(PA) <> NULO) then begin
         PAAux:= A.HijoIzquierdo(PA);
@@ -358,7 +363,7 @@ var
         end;
       end;
       BuscarNodos(PA^.HD, Nodos);
-    end;
+    end;   }
   end;
 begin
   CAux.Crear(A.DatoDeLaClave, A.SizeTree);
@@ -379,6 +384,100 @@ begin
       memo1.Lines.Add('No existen nodos con dos hijos');
   end else
     memo1.Lines.Add('Arbol vacio');
+end;
+
+
+//------------------------------------------------------------------------------
+//Secuencia de impares descendiente
+
+Function fObtenerSecuenciasImparesDesc (Var C:Cola): Lista;
+var
+  Anterior: TipoElemento;
+  LAux: Lista;
+  CAux: Cola;
+  CadenaImpares: String;
+  Procedure Recorrer(Var CAux: Cola; Var Ante: TipoElemento; Var CImpares: String);
+  var
+    Actual: TipoElemento;
+    Datos: TipoElemento;
+  begin
+    if (not C.EsVacia) then begin
+      Actual:= C.Recuperar;
+      if ((Ante.clave mod 2) <> 0) and ((Actual.Clave mod 2) <> 0) then begin
+        CImpares:= CImpares + ', ' + VarToStr(Actual.Clave);
+      end else begin
+        CImpares:= CImpares + ');';
+        Datos.Clave:= CImpares;
+        LAux.Agregar(Datos);
+        CImpares:= '(';
+      end;
+      Ante:= Actual;
+      CAux.Encolar(Actual);
+      C.DesEncolar;
+      Recorrer(CAux, Ante, CImpares);
+    end;
+  end;
+begin
+  LAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+  CAux.Crear(C.DatoDeLaClave, C.SizeQueue);
+  Anterior:= C.Recuperar;
+  CAux.Encolar(Anterior);
+  if ((Anterior.clave mod 2) <> 0) then begin
+    CadenaImpares:= '(' + VarToStr(Anterior.Clave);
+  end else
+    CadenaImpares:= '(';
+  Recorrer(CAux, Anterior, CadenaImpares);
+  C.InterCambiar(CAux, False);
+  Result:= LAux;
+end;
+
+procedure TForm1.Button10Click(Sender: TObject);
+var
+  L: Lista;
+begin
+  if (not C.EsVacia) then begin
+    L:= fObtenerSecuenciasImparesDesc(C);
+    memo1.Lines.Add(L.RetornarClaves);
+  end;
+end;
+
+
+//------------------------------------------------------------------------------
+//Nodos al mismo de un determinado nivel
+
+Function Niveles(Var A: Arbol; Nivel: Integer): Lista;
+var
+  LAux: Lista;
+  Procedure Buscar(PA: PosicionArbol; N: Integer);
+  var
+    X: TipoElemento;
+  begin
+    if (not A.RamaNula(PA)) then begin
+      if (N = 0) then begin
+        while (PA^.Datos.Clave <> NULO) do begin
+          X:= A.Recuperar(PA);
+          LAux.Agregar(X);
+          PA:= PA^.HD;
+        end;
+      end else begin
+        Buscar(PA^.HI, (N - 1));
+        Buscar(PA^.HD, N);
+      end;
+    end;
+  end;
+begin
+  LAux.Crear(A.DatoDeLaClave, A.SizeTree);
+  if (Nivel >= 0) then
+    Buscar(A.Root, Nivel);
+  Result:= LAux;
+end;
+
+procedure TForm1.Button11Click(Sender: TObject);
+var
+  L: Lista;
+begin
+  L:= Niveles(A, StrToInt(edit3.Text));
+  memo1.Lines.Add(L.RetornarClaves);
 end;
 
 end.

@@ -242,5 +242,6 @@ End;
 Function Cola.MaxSizeQueue(): LongInt;
 Begin
   MaxSizeQueue := MAX;
-End;
+End;
+
 End.

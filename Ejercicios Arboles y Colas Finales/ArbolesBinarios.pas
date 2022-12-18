@@ -55,6 +55,7 @@ Interface
         Procedure SetRoot(R:PosicionArbol);
         Procedure ConectarHI(P:PosicionArbol; Q:PosicionArbol);
         Procedure ConectarHD(P:PosicionArbol; Q:PosicionArbol);
+        Function SumatoriaNodos(): LongInt;
       End;
 
 Implementation
@@ -557,5 +558,22 @@ Begin
   If Q <> Nulo Then Q_Items := Q_Items + ContarNodos(Q);
 
 End;
+
+Function Arbol.SumatoriaNodos(): LongInt;
+var
+  Suma: LongInt;
+  Procedure Sumar(Q: PosicionArbol; Var Sumatoria: LongInt);
+  begin
+    if (Q <> NULO) then begin
+      Sumatoria:= Sumatoria + Q^.Datos.Clave;
+      Sumar(Q^.HI, Sumatoria);
+      Sumar(Q^.HD, Sumatoria);
+    end;
+  end;
+begin
+  Suma:= 0;
+  Sumar(Root, Suma);
+  SumatoriaNodos:= Suma;
+end;
 
 End.

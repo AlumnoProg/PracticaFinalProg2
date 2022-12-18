@@ -1,0 +1,50 @@
+unit Cola;
+
+interface
+
+uses ListPointer, Tipos;
+
+Type
+ Cola = Object
+ Private
+ Items: Lista;
+ Public
+     function crear(dato:TipoDatosClave; size:Longint):Errores;
+     function esVacia():Boolean;
+     function esLlena(): Boolean;
+     function Encolar(elemento:TipoElemento):Errores;
+     Function Desencolar();
+     function Recuperar():TipoElemento;
+     Function RetornarClaves(): String;
+     Function InterCambiar(Var CAux: Cola; bCrearVacia: Boolean): LongInt;
+     Function LlenarClavesRandom(alSize: LongInt; RangoDesde, RangoHasta: LongInt): Errores;
+     Function Frente(): PosicionCola;
+     Function Final():PosicionPila;
+     Function DatoDeLaClave():TipoDatosClave;
+     Function SizeQueue(): LongInt;
+     Function MaxSizeQueue(): LongInt;
+ End;
+
+implementation
+
+  Function Cola.Crear(dato: TipoDatosClave; Size: LongInt): Errores;
+  begin
+    Crear:= Items.Crear(dato, Size);
+  end;
+
+  Function Cola.esVacia(): Boolean;
+  begin
+    esVacia:= items.esVacia;
+  end;
+
+  Function Cola.esLlena(): Boolean;
+  begin
+    esLlena:= items.esLlena;
+  end;
+
+  Function Cola.Encolar(elemento: TipoElemento): Errores;
+  begin
+    Encolar:= items.Agregar(elemento);
+  end;
+
+end.

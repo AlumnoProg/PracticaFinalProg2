@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 255
+  ClientHeight = 294
   ClientWidth = 599
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -131,5 +131,31 @@ object Form1: TForm1
     Caption = 'Limpiar Pantalla'
     TabOrder = 11
     WordWrap = True
+  end
+  object Button10: TButton
+    Left = 8
+    Top = 255
+    Width = 121
+    Height = 34
+    Caption = 'Sec. Imp. Desc. NO ANDA'
+    TabOrder = 12
+    OnClick = Button10Click
+  end
+  object Button11: TButton
+    Left = 135
+    Top = 255
+    Width = 74
+    Height = 34
+    Caption = 'Nodos En Nivel'
+    TabOrder = 13
+    WordWrap = True
+    OnClick = Button11Click
+  end
+  object Edit3: TEdit
+    Left = 215
+    Top = 261
+    Width = 41
+    Height = 21
+    TabOrder = 14
   end
 end
